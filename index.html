@@ -41,9 +41,16 @@
     @media(max-width:900px){.hall-grid{grid-template-columns:repeat(2,minmax(150px,1fr))}}
     @media(max-width:520px){.hall-grid{grid-template-columns:1fr}.table-card{min-height:180px}}
 
+
+    .sync-note{margin-top:12px;font-size:12px;line-height:1.6;color:#cbbda9}
+    .sync-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#8a8176;margin-right:6px}
+    .sync-dot.ok{background:#7db37d}
+    .sync-dot.err{background:#c77777}
+
     @media(max-width:750px){.navlinks a:first-child{display:none}.hero{min-height:570px}.hero-content{padding:75px 16px}.grid,.buy-grid{grid-template-columns:1fr}.poster{min-height:370px}.details{padding:30px}.buy-grid{gap:25px}.steps{grid-template-columns:1fr}.section-top{display:block}section{padding:58px 0}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <header class="wrap nav"><a class="brand" href="#top">QUT<small>RESTAURANT</small></a><nav class="navlinks" aria-label="Негізгі мәзір"><a href="#events">Концерттер</a><a href="#how">Қалай сатып аламын?</a><a class="btn" href="#tickets">БИЛЕТ АЛУ ↗</a></nav></header>
@@ -55,7 +62,7 @@
   <div class="rule"></div>
   <div class="seat-map-wrap">
     <div class="stage">САХНА</div>
-    <div class="seat-legend">
+    <div class="sync-note" id="syncNote"><span class="sync-dot" id="syncDot"></span><span id="syncText">Орындар базамен синхрондалуда...</span></div><div class="seat-legend">
       <div class="legend-item"><span class="legend-dot"></span> Бос орын</div>
       <div class="legend-item"><span class="legend-dot selected"></span> Таңдалған</div>
       <div class="legend-item"><span class="legend-dot sold"></span> Сатылған</div>
@@ -83,11 +90,15 @@
 <script>
   const price=10000;
   const whatsappNumber='77003441472';
-  const selectedSeats=new Set();
 
-  // Кейін нақты сатылған орындар белгілі болғанда:
-  // мысалы const soldSeats=new Set(['1-1','1-2','5-4']);
-  const soldSeats=new Set([]);
+  // === SUPABASE БАПТАУЫ ===
+  // Келесі екі мәнді Supabase жобасынан көшіріп қоямыз.
+  const SUPABASE_URL='https://bsdbkzopylzghywassii.supabase.co';
+  const SUPABASE_ANON_KEY='sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg';
+
+  const selectedSeats=new Set();
+  const soldSeats=new Set();
+  let supabaseClient=null;
 
   function formatMoney(value){
     return new Intl.NumberFormat('kk-KZ').format(value)+' ₸';
@@ -97,8 +108,61 @@
     return `${table}-${seat}`;
   }
 
+  function setSyncStatus(text, state=''){
+    const dot=document.getElementById('syncDot');
+    const txt=document.getElementById('syncText');
+    if(!dot || !txt) return;
+    dot.className='sync-dot'+(state ? ' '+state : '');
+    txt.textContent=text;
+  }
+
+  function getSupabase(){
+    if(SUPABASE_URL.startsWith('PASTE_') || SUPABASE_ANON_KEY.startsWith('PASTE_')){
+      return null;
+    }
+    if(!supabaseClient){
+      supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+    }
+    return supabaseClient;
+  }
+
+  async function loadSeatStatuses(){
+    const sb=getSupabase();
+    if(!sb){
+      setSyncStatus('Supabase әлі қосылмаған — уақытша локал режим.', '');
+      renderHall();
+      return;
+    }
+
+    setSyncStatus('Орындар базамен синхрондалуда...', '');
+    const {data,error}=await sb
+      .from('seats')
+      .select('table_no,seat_no,status')
+      .eq('event_code','QUT-ACOUSTIC-001');
+
+    if(error){
+      console.error(error);
+      setSyncStatus('Базамен байланыс болмады. Кейін қайта байқап көріңіз.', 'err');
+      renderHall();
+      return;
+    }
+
+    soldSeats.clear();
+    (data||[]).forEach(row=>{
+      if(row.status==='sold'){
+        soldSeats.add(seatCode(row.table_no,row.seat_no));
+        selectedSeats.delete(seatCode(row.table_no,row.seat_no));
+      }
+    });
+
+    renderHall();
+    updateSelection();
+    setSyncStatus('Орындар базамен синхрондалды.', 'ok');
+  }
+
   function renderHall(){
     const hall=document.getElementById('hallGrid');
+    if(!hall) return;
     hall.innerHTML='';
 
     for(let table=1; table<=16; table++){
@@ -128,7 +192,9 @@
         if(soldSeats.has(code)){
           btn.classList.add('sold');
           btn.disabled=true;
+          btn.title='Сатылған';
         } else {
+          if(selectedSeats.has(code)) btn.classList.add('selected');
           btn.addEventListener('click',()=>toggleSeat(code,btn));
         }
         seats.appendChild(btn);
@@ -199,8 +265,10 @@
   }
 
   document.getElementById('year').textContent=new Date().getFullYear();
-  renderHall();
-  updateSelection();
+  loadSeatStatuses();
+
+  // Әр 20 секунд сайын сатылған орындарды жаңартамыз.
+  setInterval(loadSeatStatuses,20000);
 </script>
 </body>
 </html>
