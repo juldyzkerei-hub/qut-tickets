@@ -25,30 +25,34 @@
 <main id="top">
   <div class="hero"><div class="hero-content"><div class="eyebrow">QUT RESTAURANT PRESENTS</div><h1>QUT</h1><div class="ornament"></div><h2>Ерекше кештің<br>ерекше атмосферасы</h2><p>Жанды музыка, жақын адамдар және есте қалатын сәттер. Келесі әдемі кешіңіз осы жерден басталады.</p><a class="btn" href="#events">КОНЦЕРТТЕРДІ КӨРУ ↓</a></div></div>
   <section class="wrap" id="events"><div class="section-top"><div><div class="eyebrow">Жақында</div><h2 class="section-title">Акустикалық кеш</h2></div><p class="muted">QUT Restaurant ұсынады</p></div><article class="grid"><div class="poster" aria-label="QUT акустикалық кешінің сәндік афишасы"><div class="poster-inner"><div class="mini">QUT RESTAURANT</div><div class="big">LIVE<br>ACOUSTIC</div><div class="spark">✦</div><div class="caption">Музыкаға толы кеш</div></div></div><div class="details"><div class="eyebrow">Кешке шақырамыз</div><h3>Жанды музыка.<br>Жылы атмосфера.</h3><p class="muted">QUT мейрамханасындағы акустикалық кешке билет алыңыз. Концерттің күні, уақыты және толық бағдарламасы ұйымдастырушымен нақтыланады.</p><div class="tags"><span class="tag">♫ Жанды музыка</span><span class="tag">✦ QUT Restaurant</span></div><div class="rule"></div><div class="muted">Бір билет бағасы</div><div class="price">10 000 ₸</div><a href="#tickets" class="btn">БИЛЕТ САТЫП АЛУ ↗</a></div></article></section>
-  <section class="buy" id="tickets"><div class="wrap buy-grid"><div><div class="eyebrow">Өзіңізге орын дайындаңыз</div><h2>Кешіңізді дәл қазір жоспарлаңыз</h2><p class="muted">Билет санын таңдап, жалпы соманы көріңіз. Төлеу батырмасы Құт мейрамханасының Kaspi төлем сілтемесін ашады.</p></div><div class="purchase"><div class="line"><strong>Акустикалық кеш</strong><span>10 000 ₸ / билет</span></div><div class="rule"></div><div class="line"><span>Билет саны</span><div class="quantity"><button type="button" onclick="changeQty(-1)" aria-label="Билет санын азайту">−</button><span id="qty" aria-live="polite">1</span><button type="button" onclick="changeQty(1)" aria-label="Билет санын көбейту">+</button></div></div><div class="rule"></div><div class="line"><strong>Жалпы сома</strong><div class="total" id="total" aria-live="polite">10 000 ₸</div></div><a class="btn" href="https://pay.kaspi.kz/pay/esljdaq6" target="_blank" rel="noopener noreferrer">KASPI АРҚЫЛЫ ТӨЛЕУ ↗</a><p class="note">Маңызды: көрсетілген сома Kaspi-ге автоматты берілмейді. Kaspi бетінде төлем сомасын тексеріңіз. Төлемнен кейін билет әзірге автоматты берілмейді; растау үшін ұйымдастырушыға хабарласыңыз.</p><a class="btn outline" style="width:100%;margin-top:12px" href="https://wa.me/77003441472?text=%D0%A1%D3%99%D0%BB%D0%B5%D0%BC%D0%B5%D1%82%D1%81%D1%96%D0%B7%20%D0%B1%D0%B5%2C%20QUT%20%D0%B0%D0%BA%D1%83%D1%81%D1%82%D0%B8%D0%BA%D0%B0%D0%BB%D1%8B%D2%9B%20%D0%BA%D0%B5%D1%88%D1%96%D0%BD%D0%B5%20%D0%B1%D0%B8%D0%BB%D0%B5%D1%82%20%D0%B6%D3%A9%D0%BD%D1%96%D0%BD%D0%B4%D0%B5%20%D0%B6%D0%B0%D0%B7%D1%8B%D0%BF%20%D0%BE%D1%82%D1%8B%D1%80%D0%BC%D1%8B%D0%BD." target="_blank" rel="noopener noreferrer">WHATSAPP-ПЕН ХАБАРЛАСУ ↗</a></div></div></section>
+  <section class="buy" id="tickets"><div class="wrap buy-grid"><div><div class="eyebrow">Өзіңізге орын дайындаңыз</div><h2>Кешіңізді дәл қазір жоспарлаңыз</h2><p class="muted">Билет санын таңдап, жалпы соманы көріңіз. Төлеу батырмасы Құт мейрамханасының Kaspi төлем сілтемесін ашады.</p></div><div class="purchase"><div class="line"><strong>Акустикалық кеш</strong><span>10 000 ₸ / билет</span></div><div class="rule"></div><div class="line"><span>Билет саны</span><div class="quantity"><button type="button" onclick="changeQty(-1)" aria-label="Билет санын азайту">−</button><span id="qty" aria-live="polite">1</span><button type="button" onclick="changeQty(1)" aria-label="Билет санын көбейту">+</button></div></div><div class="rule"></div><div class="line"><strong>Жалпы сома</strong><div class="total" id="total" aria-live="polite">10 000 ₸</div></div><a class="btn" id="kaspiBtn" href="https://pay.kaspi.kz/pay/esljdaq6" target="_blank" rel="noopener noreferrer">KASPI АРҚЫЛЫ ТӨЛЕУ ↗</a><p class="note">Kaspi беті ашылғанда жоғарыда көрсетілген жалпы соманы төлеңіз. Қазір төлем сомасы Kaspi-ге автоматты берілмейді.</p><a class="btn outline" id="confirmBtn" style="width:100%;margin-top:12px" href="#" target="_blank" rel="noopener noreferrer">✓ ТӨЛЕМ ЖАСАДЫМ — РАСТАУ</a><p class="note">Растау батырмасы WhatsApp-ты ашады. Билет саны мен жалпы сома хабарламаға автоматты түрде жазылады. Ұйымдастырушы Kaspi Pay-ден төлемді тексергеннен кейін билетіңізді растайды.</p></div></div></section>
   <section class="wrap" id="how"><div class="eyebrow">Барлығы түсінікті</div><h2 class="section-title" style="margin-bottom:35px">Билетті қалай аламын?</h2><div class="steps"><div class="step"><strong>01</strong><h3>Билет санын таңдаңыз</h3><p>Өзіңізге және достарыңызға керекті билет санын белгілеңіз.</p></div><div class="step"><strong>02</strong><h3>Kaspi арқылы төлеңіз</h3><p>Kaspi бетінде соманы тексеріп, төлем жасаңыз.</p></div><div class="step"><strong>03</strong><h3>Билетіңізді растаңыз</h3><p>Қазір төлемнен кейін ұйымдастырушымен WhatsApp арқылы байланысыңыз. Автоматты QR-билет жүйесі кейін қосылады.</p></div></div></section>
 </main>
 <footer><div class="wrap"><div><span class="brand" style="font-size:22px">QUT</span><br>Кешіңіз ерекше өтсін.</div><div>Байланыс: <a href="tel:+77003441472">+7 700 344 14 72</a><br><br>© <span id="year"></span> QUT Restaurant</div></div></footer>
 <script>
-  let count=1;const price=10000;
-  function changeQty(diff){count=Math.min(20,Math.max(1,count+diff));document.getElementById('qty').textContent=count;document.getElementById('total').textContent=new Intl.NumberFormat('kk-KZ').format(count*price)+' ₸'}
-  document.getElementById('year').textContent=new Date().getFullYear();
-</script>
+  let count=1;
+  const price=10000;
+  const whatsappNumber='77003441472';
 
-<section style="padding:70px 20px; background:#18130f; text-align:center; color:#f5e6c6;">
-  <p style="color:#d9b777; letter-spacing:4px;">КЕЛЕСІ КЕШ</p>
-  <h2 style="font-size:38px;">Ерғали Көшербай — Бенефис шоу</h2>
-  <img src="afisha-16-qazan.JPG"
-       alt="16 қазан — Ерғали Көшербайдың бенефис шоуы"
-       style="width:100%; max-width:500px; border:1px solid #d9b777; border-radius:12px; margin:25px auto;">
-  <p>16 қазан | 18:00</p>
-  <p>Құт мейрамханасы, Тұрғыт Озал көшесі, 178, 4-қабат</p>
-  <h3 style="color:#d9b777;">10 000 ₸</h3>
-  <a href="https://pay.kaspi.kz/pay/esljdaq6"
-     target="_blank" rel="noopener noreferrer"
-     style="display:inline-block; padding:17px 35px; background:#d9b777; color:#18130f; border-radius:6px; text-decoration:none; font-weight:bold;">
-    KASPI АРҚЫЛЫ ТӨЛЕУ
-  </a>
-</section>
+  function formatMoney(value){
+    return new Intl.NumberFormat('kk-KZ').format(value)+' ₸';
+  }
+
+  function updateWhatsAppLink(){
+    const total=count*price;
+    const message=`Сәлеметсіз бе! QUT акустикалық кешіне ${count} билет үшін ${formatMoney(total)} төледім. Төлемді Kaspi Pay арқылы жасадым. Төлемді тексеріп, билетімді растап жіберуіңізді өтінемін.`;
+    document.getElementById('confirmBtn').href=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  }
+
+  function changeQty(diff){
+    count=Math.min(20,Math.max(1,count+diff));
+    document.getElementById('qty').textContent=count;
+    document.getElementById('total').textContent=formatMoney(count*price);
+    updateWhatsAppLink();
+  }
+
+  document.getElementById('year').textContent=new Date().getFullYear();
+  updateWhatsAppLink();
+</script>
 </body>
 </html>
