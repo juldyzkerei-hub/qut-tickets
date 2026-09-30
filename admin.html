@@ -48,7 +48,7 @@ select{width:100%;padding:12px;background:#15120f;color:#fff;border:1px solid #6
     <div class="muted" id="loginMsg"></div>
   </div>
 
-  <div id="adminArea" class="hidden"><div class="card no-print"><label for="eventSelect">Кешті таңдаңыз</label><select id="eventSelect" onchange="changeEvent(this.value)"><option value="QUT-ASKHAT-20261007">Асхат Қылышбек — 7 қазан 2026, 18:00</option><option value="QUT-QYZDARAI-20261030">Қыздар-ай — 30 қазан 2026, 19:00</option><option value="QUT-ACOUSTIC-001">Бұрынғы акустикалық кеш (архив)</option></select><p id="adminEventInfo" class="muted"></p></div>
+  <div id="adminArea" class="hidden"><div class="card no-print"><label for="eventSelect">Кешті таңдаңыз</label><select id="eventSelect" onchange="changeEvent(this.value)"></select><p id="adminEventInfo" class="muted"></p></div>
     <div class="card no-print">
       <div class="grid">
         <div>
@@ -101,7 +101,7 @@ select{width:100%;padding:12px;background:#15120f;color:#fff;border:1px solid #6
   </div>
 </div>
 
-<script src="events.js?v=20261001-002"></script>
+<script src="events.js?v=20261001-003"></script>
 <script>
 const SUPABASE_URL='https://bsdbkzopylzghywassii.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg';
@@ -122,7 +122,7 @@ async function changeEvent(code){
   document.getElementById('adminEventInfo').textContent=next.name+' • '+next.date+' '+next.time+' • '+next.venue;
   setMode('sell'); await refreshSeats();
 }
-const PRICE=10000;
+
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 const selected=new Set();
@@ -304,7 +304,7 @@ async function confirmSold(){
   const {error}=await sb.from('seats').upsert(rows,{onConflict:'event_code,table_no,seat_no'});
   if(error){alert('Сақтау қатесі: '+error.message);return}
 
-  const amount=seats.length*PRICE;
+  const amount=seats.length*activeEvent.price;
   document.getElementById('tEvent').textContent=activeEvent.name+' • '+activeEvent.date+' '+activeEvent.time;
   document.getElementById('tVenue').textContent=activeEvent.venue;
   document.getElementById('tName').textContent=name;
@@ -326,6 +326,7 @@ async function confirmSold(){
   alert('Орындар сатылды деп белгіленді. Билет дайын.');
 }
 
+document.getElementById('eventSelect').innerHTML=events.map(e=>`<option value="${e.code}">${e.name}${e.date ? ' — '+e.date+', '+e.time : ''}</option>`).join('');
 initAdmin();
 </script>
 </body>
