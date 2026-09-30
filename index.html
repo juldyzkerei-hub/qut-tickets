@@ -57,10 +57,9 @@
 <header class="wrap nav"><a class="brand" href="#top">QUT<small>RESTAURANT</small></a><nav class="navlinks" aria-label="Негізгі мәзір"><a href="#events">Концерттер</a><a href="#how">Қалай сатып аламын?</a><a class="btn" href="#tickets">БИЛЕТ АЛУ ↗</a></nav></header>
 <main id="top">
   <div class="hero"><div class="hero-content"><div class="eyebrow">QUT RESTAURANT PRESENTS</div><h1>QUT</h1><div class="ornament"></div><h2>Ерекше кештің<br>ерекше атмосферасы</h2><p>Жанды музыка, жақын адамдар және есте қалатын сәттер. Келесі әдемі кешіңіз осы жерден басталады.</p><a class="btn" href="#events">КОНЦЕРТТЕРДІ КӨРУ ↓</a></div></div>
-  <section class="wrap" id="events"><div class="section-top"><div><div class="eyebrow">Жақында</div><h2 class="section-title">Алдағы концерттер</h2></div><p class="muted">QUT Restaurant ұсынады</p></div><article class="grid event-card"><div class="poster event-poster"><img src="afisha-askhat-v2.jpg" alt="Асхат Қылышбек — Бенефис шоу-концерт, 7 қазан 2026, 18:00" loading="lazy"></div><div class="details"><div class="eyebrow">Бенефис шоу-концерт</div><h3>Асхат Қылышбек</h3><div class="tags"><span class="tag">7 қазан 2026</span><span class="tag">Сағат 18:00</span></div><p class="muted">«Құт» мейрамханасы, Тургут Озала 178, 4-қабат</p><div class="rule"></div><div class="muted">Бір билет бағасы</div><div class="price">10 000 ₸</div><a href="#tickets" class="btn" onclick="chooseEvent('QUT-ASKHAT-20261007')">ОРЫН ТАҢДАУ ↗</a></div></article>
-<article class="grid event-card"><div class="poster event-poster"><img src="afisha-qyzdarai.png" alt="Қыздар-ай — Бенефис шоу, 30 қазан 2026, 19:00" loading="lazy"></div><div class="details"><div class="eyebrow">Бенефис шоу</div><h3>Қыздар-ай</h3><div class="tags"><span class="tag">30 қазан 2026</span><span class="tag">Сағат 19:00</span></div><p class="muted">«Құт» мейрамханасы, Тургут Озала 178</p><div class="rule"></div><div class="muted">Бір билет бағасы</div><div class="price">10 000 ₸</div><a href="#tickets" class="btn" onclick="chooseEvent('QUT-QYZDARAI-20261030')">ОРЫН ТАҢДАУ ↗</a></div></article></section>
+  <section class="wrap" id="events"><div class="section-top"><div><div class="eyebrow">Жақында</div><h2 class="section-title">Алдағы концерттер</h2></div><p class="muted">QUT Restaurant ұсынады</p></div><div id="eventCards"></div></section>
   <section class="buy" id="tickets"><div class="wrap buy-grid"><div><div class="eyebrow">Өзіңізге орын дайындаңыз</div><h2>Кешіңізді дәл қазір жоспарлаңыз</h2><p class="muted">16 үстелдің бірін таңдап, өзіңізге қажетті орындарды белгілеңіз. Әр үстелде 6 орын бар. Таңдалған орындар бойынша жалпы сома автоматты есептеледі.</p></div><div class="purchase">
-  <label for="eventSelect">Кешті таңдаңыз</label><select id="eventSelect" class="event-picker" onchange="chooseEvent(this.value)"><option value="QUT-ASKHAT-20261007">Асхат Қылышбек — 7 қазан 2026, 18:00</option><option value="QUT-QYZDARAI-20261030">Қыздар-ай — 30 қазан 2026, 19:00</option></select><div class="line"><strong id="eventTitle"></strong><span>10 000 ₸ / орын</span></div><p class="muted" id="eventInfo"></p>
+  <label for="eventSelect">Кешті таңдаңыз</label><select id="eventSelect" class="event-picker" onchange="chooseEvent(this.value)"></select><div class="line"><strong id="eventTitle"></strong><span id="seatPrice"></span></div><p class="muted" id="eventInfo"></p>
   <div class="rule"></div>
   <div class="seat-map-wrap">
     <div class="stage">САХНА</div>
@@ -89,13 +88,13 @@
   <section class="wrap" id="how"><div class="eyebrow">Барлығы түсінікті</div><h2 class="section-title" style="margin-bottom:35px">Билетті қалай аламын?</h2><div class="steps"><div class="step"><strong>01</strong><h3>Үстел мен орынды таңдаңыз</h3><p>16 үстелдің ішінен өзіңізге ұнаған үстелді және 1–6 орынның бірін немесе бірнешеуін белгілеңіз.</p></div><div class="step"><strong>02</strong><h3>Kaspi арқылы төлеңіз</h3><p>Сайттағы жалпы соманы қарап, Kaspi бетінде дәл сол соманы төлеңіз.</p></div><div class="step"><strong>03</strong><h3>Орынды растаңыз</h3><p>«Төлем жасадым» батырмасы WhatsApp-та үстел мен орындарды автоматты жазады. Ұйымдастырушы төлемді тексеріп, броньды растайды.</p></div></div></section>
 </main>
 <footer><div class="wrap"><div><span class="brand" style="font-size:22px">QUT</span><br>Кешіңіз ерекше өтсін.</div><div>Байланыс: <a href="tel:+77003441472">+7 700 344 14 72</a><br><br>© <span id="year"></span> QUT Restaurant</div></div></footer>
-<script src="events.js?v=20261001-002"></script>
+<script src="events.js?v=20261001-003"></script>
 <script>
   const events=window.QUT_EVENTS;
   let activeEvent=events[0];
   let seatsReady=false;
   let seatRequest=0;
-  const price=10000;
+  
   function chooseEvent(code){
     const next=events.find(e=>e.code===code);
     if(!next) return;
@@ -103,6 +102,7 @@
     selectedSeats.clear(); soldSeats.clear();
     document.getElementById('eventSelect').value=code;
     document.getElementById('eventTitle').textContent=next.name;
+    document.getElementById('seatPrice').textContent=formatMoney(next.price)+' / орын';
     document.getElementById('eventInfo').textContent=next.date+' • '+next.time+' • '+next.venue;
     renderHall(); updateSelection(); loadSeatStatuses();
   }
@@ -265,7 +265,7 @@
   function updateSelection(){
     const list=sortedSelection();
     const count=list.length;
-    const total=count*price;
+    const total=count*activeEvent.price;
 
     document.getElementById('selectionList').textContent =
       count ? list.map(humanSeat).join(' • ') : 'Әзірге орын таңдалмады';
@@ -298,6 +298,10 @@
   }
 
   document.getElementById('year').textContent=new Date().getFullYear();
+
+  document.getElementById('eventSelect').innerHTML=events.map(e=>`<option value="${e.code}">${e.name} — ${e.date}, ${e.time}</option>`).join('');
+  document.getElementById('eventCards').innerHTML=events.map(e=>`<article class="grid event-card"><div class="poster event-poster"><img src="${e.poster}" alt="${e.name} — ${e.date}, ${e.time}" loading="lazy"></div><div class="details"><div class="eyebrow">${e.type}</div><h3>${e.name}</h3><div class="tags"><span class="tag">${e.date}</span><span class="tag">Сағат ${e.time}</span></div><p class="muted">${e.venue}</p>${e.description ? '<p class="muted">'+e.description+'</p>' : ''}<div class="rule"></div><div class="muted">Бір билет бағасы</div><div class="price">${formatMoney(e.price)}</div><a href="#tickets" class="btn" onclick="chooseEvent('${e.code}')">ОРЫН ТАҢДАУ ↗</a></div></article>`).join('');
+
   chooseEvent(events[0].code);
 
   // Әр 20 секунд сайын сатылған орындарды жаңартамыз.
