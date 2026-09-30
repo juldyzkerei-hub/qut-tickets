@@ -59,7 +59,11 @@ input{width:100%;padding:12px;border-radius:8px;border:1px solid #6e5838;backgro
           <h3>2. Орындарды таңдаңыз</h3>
           <div class="muted" id="selectionText">Орын таңдалмады</div>
           <div class="actions">
-            <button class="btn" onclick="confirmSold()">ТӨЛЕМ РАСТАЛДЫ — САТЫЛДЫ</button>
+            <button class="btn" id="sellModeBtn" onclick="setMode('sell')">САТУ РЕЖИМІ</button>
+            <button class="btn outline" id="releaseModeBtn" onclick="setMode('release')">БОСАТУ РЕЖИМІ</button>
+          </div>
+          <div class="actions">
+            <button class="btn" id="mainActionBtn" onclick="runMainAction()">ТӨЛЕМ РАСТАЛДЫ — САТЫЛДЫ</button>
             <button class="btn outline" onclick="clearSelected()">ТАЗАЛАУ</button>
             <button class="btn danger" onclick="signOut()">ШЫҒУ</button>
           </div>
@@ -69,7 +73,7 @@ input{width:100%;padding:12px;border-radius:8px;border:1px solid #6e5838;backgro
 
     <div class="card no-print">
       <h3>Зал</h3>
-      <div class="muted">Алтын — таңдалған, сұр — сатылған.</div>
+      <div class="muted" id="modeHelp">Сату режимі: бос орындарды таңдаңыз. Алтын — таңдалған, сұр — сатылған.</div>
       <div id="tables" class="tables"></div>
     </div>
 
@@ -105,6 +109,7 @@ const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
 const selected=new Set();
 const sold=new Set();
+let mode='sell';
 
 function code(t,s){return `${t}-${s}`}
 function money(v){return new Intl.NumberFormat('kk-KZ').format(v)+' ₸'}
@@ -123,6 +128,7 @@ async function initAdmin(){
   if(!session) return;
   document.getElementById('loginCard').classList.add('hidden');
   document.getElementById('adminArea').classList.remove('hidden');
+  setMode('sell');
   await refreshSeats();
 }
 
@@ -145,15 +151,92 @@ function renderTables(){
     for(let s=1;s<=6;s++){
       const b=document.createElement('button'); b.className='seat'; b.textContent=s; b.type='button';
       const c=code(t,s);
-      if(sold.has(c)){b.classList.add('sold');b.disabled=true;}
-      else{
-        if(selected.has(c)) b.classList.add('selected');
-        b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateSelectionText();}
+      if(sold.has(c)){
+        b.classList.add('sold');
+        if(mode==='release'){
+          b.disabled=false;
+          if(selected.has(c)) b.classList.add('selected');
+          b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateSelectionText();}
+        }else{
+          b.disabled=true;
+        }
+      } else {
+        if(mode==='sell'){
+          if(selected.has(c)) b.classList.add('selected');
+          b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateSelectionText();}
+        }else{
+          b.disabled=true;
+        }
       }
       sroot.appendChild(b);
     }
     box.appendChild(sroot); root.appendChild(box);
   }
+}
+
+function setMode(nextMode){
+  mode=nextMode;
+  selected.clear();
+
+  const sellBtn=document.getElementById('sellModeBtn');
+  const releaseBtn=document.getElementById('releaseModeBtn');
+  const actionBtn=document.getElementById('mainActionBtn');
+  const help=document.getElementById('modeHelp');
+
+  if(mode==='sell'){
+    sellBtn.className='btn';
+    releaseBtn.className='btn outline';
+    actionBtn.className='btn';
+    actionBtn.textContent='ТӨЛЕМ РАСТАЛДЫ — САТЫЛДЫ';
+    help.textContent='Сату режимі: бос орындарды таңдаңыз. Алтын — таңдалған, сұр — сатылған.';
+  }else{
+    sellBtn.className='btn outline';
+    releaseBtn.className='btn danger';
+    actionBtn.className='btn danger';
+    actionBtn.textContent='ТАҢДАЛҒАН ОРЫНДАРДЫ БОСАТУ';
+    help.textContent='Босату режимі: тек сұр (сатылған) орындарды таңдаңыз да, босатыңыз.';
+  }
+
+  renderTables();
+  updateSelectionText();
+}
+
+async function runMainAction(){
+  if(mode==='sell') return confirmSold();
+  return releaseSeats();
+}
+
+async function releaseSeats(){
+  const seats=sorted();
+  if(!seats.length){alert('Босататын сатылған орындарды таңдаңыз');return}
+
+  const ok=confirm(`Таңдалған ${seats.length} орынды қайта босатамыз ба?`);
+  if(!ok) return;
+
+  for(const c of seats){
+    const [t,s]=c.split('-').map(Number);
+    const {error}=await sb
+      .from('seats')
+      .update({
+        status:'available',
+        ticket_id:null,
+        customer_name:null,
+        customer_phone:null,
+        sold_at:null
+      })
+      .eq('event_code',EVENT_CODE)
+      .eq('table_no',t)
+      .eq('seat_no',s);
+
+    if(error){
+      alert('Орынды босату қатесі: '+error.message);
+      return;
+    }
+  }
+
+  selected.clear();
+  await refreshSeats();
+  alert('Орындар қайта босатылды.');
 }
 
 function sorted(){return [...selected].sort((a,b)=>{const [ta,sa]=a.split('-').map(Number),[tb,sb]=b.split('-').map(Number);return ta===tb?sa-sb:ta-tb})}
@@ -196,6 +279,8 @@ async function confirmSold(){
   document.getElementById('ticketActions').classList.remove('hidden');
 
   selected.clear();
+  mode='sell';
+  setMode('sell');
   await refreshSeats();
   alert('Орындар сатылды деп белгіленді. Билет дайын.');
 }
