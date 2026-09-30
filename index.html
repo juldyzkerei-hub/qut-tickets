@@ -49,16 +49,18 @@
 
     @media(max-width:750px){.navlinks a:first-child{display:none}.hero{min-height:570px}.hero-content{padding:75px 16px}.grid,.buy-grid{grid-template-columns:1fr}.poster{min-height:370px}.details{padding:30px}.buy-grid{gap:25px}.steps{grid-template-columns:1fr}.section-top{display:block}section{padding:58px 0}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
-  </style>
+  .event-card + .event-card{margin-top:30px}.event-poster{padding:0;min-height:0;background:#111}.event-poster:before,.event-poster:after{display:none}.event-poster img{width:100%;height:auto;display:block}.event-picker{width:100%;padding:12px;margin:10px 0 16px;background:#15120f;color:#f8f2e8;border:1px solid #9f8051;border-radius:8px;font:inherit}
+</style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 <header class="wrap nav"><a class="brand" href="#top">QUT<small>RESTAURANT</small></a><nav class="navlinks" aria-label="Негізгі мәзір"><a href="#events">Концерттер</a><a href="#how">Қалай сатып аламын?</a><a class="btn" href="#tickets">БИЛЕТ АЛУ ↗</a></nav></header>
 <main id="top">
   <div class="hero"><div class="hero-content"><div class="eyebrow">QUT RESTAURANT PRESENTS</div><h1>QUT</h1><div class="ornament"></div><h2>Ерекше кештің<br>ерекше атмосферасы</h2><p>Жанды музыка, жақын адамдар және есте қалатын сәттер. Келесі әдемі кешіңіз осы жерден басталады.</p><a class="btn" href="#events">КОНЦЕРТТЕРДІ КӨРУ ↓</a></div></div>
-  <section class="wrap" id="events"><div class="section-top"><div><div class="eyebrow">Жақында</div><h2 class="section-title">Акустикалық кеш</h2></div><p class="muted">QUT Restaurant ұсынады</p></div><article class="grid"><div class="poster" aria-label="QUT акустикалық кешінің сәндік афишасы"><div class="poster-inner"><div class="mini">QUT RESTAURANT</div><div class="big">LIVE<br>ACOUSTIC</div><div class="spark">✦</div><div class="caption">Музыкаға толы кеш</div></div></div><div class="details"><div class="eyebrow">Кешке шақырамыз</div><h3>Жанды музыка.<br>Жылы атмосфера.</h3><p class="muted">QUT мейрамханасындағы акустикалық кешке билет алыңыз. Концерттің күні, уақыты және толық бағдарламасы ұйымдастырушымен нақтыланады.</p><div class="tags"><span class="tag">♫ Жанды музыка</span><span class="tag">✦ QUT Restaurant</span></div><div class="rule"></div><div class="muted">Бір билет бағасы</div><div class="price">10 000 ₸</div><a href="#tickets" class="btn">БИЛЕТ САТЫП АЛУ ↗</a></div></article></section>
+  <section class="wrap" id="events"><div class="section-top"><div><div class="eyebrow">Жақында</div><h2 class="section-title">Алдағы концерттер</h2></div><p class="muted">QUT Restaurant ұсынады</p></div><article class="grid event-card"><div class="poster event-poster"><img src="afisha-askhat.jpg" alt="Асхат Қалшбек — Бенефис шоу-концерт, 7 қазан 2026, 18:00" loading="lazy"></div><div class="details"><div class="eyebrow">Бенефис шоу-концерт</div><h3>Асхат Қалшбек</h3><div class="tags"><span class="tag">7 қазан 2026</span><span class="tag">Сағат 18:00</span></div><p class="muted">«Құт» мейрамханасы, Тургут Озала 178, 4-қабат</p><div class="rule"></div><div class="muted">Бір билет бағасы</div><div class="price">10 000 ₸</div><a href="#tickets" class="btn" onclick="chooseEvent('QUT-ASKHAT-20261007')">ОРЫН ТАҢДАУ ↗</a></div></article>
+<article class="grid event-card"><div class="poster event-poster"><img src="afisha-qyzdarai.png" alt="Қыздар-ай — Бенефис шоу, 30 қазан 2026, 19:00" loading="lazy"></div><div class="details"><div class="eyebrow">Бенефис шоу</div><h3>Қыздар-ай</h3><div class="tags"><span class="tag">30 қазан 2026</span><span class="tag">Сағат 19:00</span></div><p class="muted">«Құт» мейрамханасы, Тургут Озала 178</p><div class="rule"></div><div class="muted">Бір билет бағасы</div><div class="price">10 000 ₸</div><a href="#tickets" class="btn" onclick="chooseEvent('QUT-QYZDARAI-20261030')">ОРЫН ТАҢДАУ ↗</a></div></article></section>
   <section class="buy" id="tickets"><div class="wrap buy-grid"><div><div class="eyebrow">Өзіңізге орын дайындаңыз</div><h2>Кешіңізді дәл қазір жоспарлаңыз</h2><p class="muted">16 үстелдің бірін таңдап, өзіңізге қажетті орындарды белгілеңіз. Әр үстелде 6 орын бар. Таңдалған орындар бойынша жалпы сома автоматты есептеледі.</p></div><div class="purchase">
-  <div class="line"><strong>Акустикалық кеш</strong><span>10 000 ₸ / орын</span></div>
+  <label for="eventSelect">Кешті таңдаңыз</label><select id="eventSelect" class="event-picker" onchange="chooseEvent(this.value)"><option value="QUT-ASKHAT-20261007">Асхат Қалшбек — 7 қазан 2026, 18:00</option><option value="QUT-QYZDARAI-20261030">Қыздар-ай — 30 қазан 2026, 19:00</option></select><div class="line"><strong id="eventTitle"></strong><span>10 000 ₸ / орын</span></div><p class="muted" id="eventInfo"></p>
   <div class="rule"></div>
   <div class="seat-map-wrap">
     <div class="stage">САХНА</div>
@@ -87,8 +89,23 @@
   <section class="wrap" id="how"><div class="eyebrow">Барлығы түсінікті</div><h2 class="section-title" style="margin-bottom:35px">Билетті қалай аламын?</h2><div class="steps"><div class="step"><strong>01</strong><h3>Үстел мен орынды таңдаңыз</h3><p>16 үстелдің ішінен өзіңізге ұнаған үстелді және 1–6 орынның бірін немесе бірнешеуін белгілеңіз.</p></div><div class="step"><strong>02</strong><h3>Kaspi арқылы төлеңіз</h3><p>Сайттағы жалпы соманы қарап, Kaspi бетінде дәл сол соманы төлеңіз.</p></div><div class="step"><strong>03</strong><h3>Орынды растаңыз</h3><p>«Төлем жасадым» батырмасы WhatsApp-та үстел мен орындарды автоматты жазады. Ұйымдастырушы төлемді тексеріп, броньды растайды.</p></div></div></section>
 </main>
 <footer><div class="wrap"><div><span class="brand" style="font-size:22px">QUT</span><br>Кешіңіз ерекше өтсін.</div><div>Байланыс: <a href="tel:+77003441472">+7 700 344 14 72</a><br><br>© <span id="year"></span> QUT Restaurant</div></div></footer>
+<script src="events.js?v=20261001"></script>
 <script>
+  const events=window.QUT_EVENTS;
+  let activeEvent=events[0];
+  let seatsReady=false;
+  let seatRequest=0;
   const price=10000;
+  function chooseEvent(code){
+    const next=events.find(e=>e.code===code);
+    if(!next) return;
+    activeEvent=next; seatsReady=false;
+    selectedSeats.clear(); soldSeats.clear();
+    document.getElementById('eventSelect').value=code;
+    document.getElementById('eventTitle').textContent=next.name;
+    document.getElementById('eventInfo').textContent=next.date+' • '+next.time+' • '+next.venue;
+    renderHall(); updateSelection(); loadSeatStatuses();
+  }
   const whatsappNumber='77003441472';
 
   // === SUPABASE БАПТАУЫ ===
@@ -127,6 +144,8 @@
   }
 
   async function loadSeatStatuses(){
+    const request=++seatRequest;
+    const eventCode=activeEvent.code;
     const sb=getSupabase();
     if(!sb){
       setSyncStatus('Supabase әлі қосылмаған — уақытша локал режим.', '');
@@ -138,15 +157,19 @@
     const {data,error}=await sb
       .from('seats')
       .select('table_no,seat_no,status')
-      .eq('event_code','QUT-ACOUSTIC-001');
+      .eq('event_code',eventCode);
+    if(request!==seatRequest || eventCode!==activeEvent.code) return;
 
     if(error){
+      seatsReady=false;
+      updateSelection();
       console.error(error);
       setSyncStatus('Базамен байланыс болмады. Кейін қайта байқап көріңіз.', 'err');
       renderHall();
       return;
     }
 
+    seatsReady=true;
     soldSeats.clear();
     (data||[]).forEach(row=>{
       if(row.status==='sold'){
@@ -189,6 +212,7 @@
 
         const code=seatCode(table,seat);
 
+        if(!seatsReady) btn.disabled=true;
         if(soldSeats.has(code)){
           btn.classList.add('sold');
           btn.disabled=true;
@@ -208,6 +232,7 @@
   }
 
   function toggleSeat(code,button){
+    if(!seatsReady || soldSeats.has(code)) return;
     if(selectedSeats.has(code)){
       selectedSeats.delete(code);
       button.classList.remove('selected');
@@ -250,9 +275,17 @@
 
     const confirmBtn=document.getElementById('confirmBtn');
 
-    if(count){
+    const canPay=!!count && seatsReady;
+    const kaspiBtn=document.getElementById('kaspiBtn');
+    kaspiBtn.style.pointerEvents=canPay?'auto':'none';
+    kaspiBtn.style.opacity=canPay?'1':'.55';
+    kaspiBtn.setAttribute('aria-disabled',String(!canPay));
+    kaspiBtn.tabIndex=canPay?0:-1;
+    confirmBtn.setAttribute('aria-disabled',String(!canPay));
+    confirmBtn.tabIndex=canPay?0:-1;
+    if(canPay){
       const seatsText=list.map(humanSeat).join(', ');
-      const message=`Сәлеметсіз бе! QUT акустикалық кешіне ${count} орын үшін ${formatMoney(total)} төледім. Таңдаған орындарым: ${seatsText}. Төлемді Kaspi Pay арқылы жасадым. Төлемді тексеріп, броньымды растауыңызды өтінемін.`;
+      const message=`Сәлеметсіз бе! ${activeEvent.name} кешіне (${activeEvent.date}, ${activeEvent.time}; ${activeEvent.code}) ${count} орын үшін ${formatMoney(total)} төледім. Таңдаған орындарым: ${seatsText}. Төлемді Kaspi Pay арқылы жасадым. Төлемді тексеріп, броньымды растауыңызды өтінемін.`;
 
       confirmBtn.href=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
       confirmBtn.style.pointerEvents='auto';
@@ -265,7 +298,7 @@
   }
 
   document.getElementById('year').textContent=new Date().getFullYear();
-  loadSeatStatuses();
+  chooseEvent(events[0].code);
 
   // Әр 20 секунд сайын сатылған орындарды жаңартамыз.
   setInterval(loadSeatStatuses,20000);

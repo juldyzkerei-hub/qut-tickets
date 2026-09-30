@@ -32,6 +32,7 @@ input{width:100%;padding:12px;border-radius:8px;border:1px solid #6e5838;backgro
 @media(max-width:760px){.grid{grid-template-columns:1fr}.tables{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:430px){.tables{grid-template-columns:1fr}}
 @media print{body{background:#fff}.no-print{display:none!important}.ticket{display:block!important;margin:0}}
+select{width:100%;padding:12px;background:#15120f;color:#fff;border:1px solid #6e5838;border-radius:8px;font:inherit}
 </style>
 </head>
 <body>
@@ -47,7 +48,7 @@ input{width:100%;padding:12px;border-radius:8px;border:1px solid #6e5838;backgro
     <div class="muted" id="loginMsg"></div>
   </div>
 
-  <div id="adminArea" class="hidden">
+  <div id="adminArea" class="hidden"><div class="card no-print"><label for="eventSelect">Кешті таңдаңыз</label><select id="eventSelect" onchange="changeEvent(this.value)"><option value="QUT-ASKHAT-20261007">Асхат Қалшбек — 7 қазан 2026, 18:00</option><option value="QUT-QYZDARAI-20261030">Қыздар-ай — 30 қазан 2026, 19:00</option><option value="QUT-ACOUSTIC-001">Бұрынғы акустикалық кеш (архив)</option></select><p id="adminEventInfo" class="muted"></p></div>
     <div class="card no-print">
       <div class="grid">
         <div>
@@ -79,7 +80,7 @@ input{width:100%;padding:12px;border-radius:8px;border:1px solid #6e5838;backgro
 
     <div id="ticket" class="ticket">
       <div class="brand" style="color:#20180e">QUT</div>
-      <div>RESTAURANT • ACOUSTIC NIGHT</div>
+      <div id="tEvent"></div><div id="tVenue"></div>
       <hr>
       <div class="row">
         <div><small>КЛИЕНТ</small><div class="big" id="tName">—</div></div>
@@ -100,10 +101,27 @@ input{width:100%;padding:12px;border-radius:8px;border:1px solid #6e5838;backgro
   </div>
 </div>
 
+<script src="events.js?v=20261001"></script>
 <script>
 const SUPABASE_URL='https://bsdbkzopylzghywassii.supabase.co';
 const SUPABASE_ANON_KEY='sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg';
-const EVENT_CODE='QUT-ACOUSTIC-001';
+const events=[...window.QUT_EVENTS,{"code":"QUT-ACOUSTIC-001","name":"Бұрынғы акустикалық кеш (архив)","date":"","time":"","venue":"«Құт» мейрамханасы","price":10000}];
+let activeEvent=events[0];
+let EVENT_CODE=activeEvent.code;
+let seatRequest=0;
+let seatsReady=false;
+let actionBusy=false;
+async function changeEvent(code){
+  if(actionBusy){document.getElementById('eventSelect').value=EVENT_CODE;return;}
+  const next=events.find(e=>e.code===code);
+  if(!next) return;
+  activeEvent=next; EVENT_CODE=next.code; seatsReady=false;
+  selected.clear(); sold.clear();
+  document.getElementById('ticket').style.display='none';
+  document.getElementById('ticketActions').classList.add('hidden');
+  document.getElementById('adminEventInfo').textContent=next.name+' • '+next.date+' '+next.time+' • '+next.venue;
+  setMode('sell'); await refreshSeats();
+}
 const PRICE=10000;
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
 
@@ -129,12 +147,19 @@ async function initAdmin(){
   document.getElementById('loginCard').classList.add('hidden');
   document.getElementById('adminArea').classList.remove('hidden');
   setMode('sell');
-  await refreshSeats();
+  await changeEvent(EVENT_CODE);
 }
 
 async function refreshSeats(){
-  const {data,error}=await sb.from('seats').select('table_no,seat_no,status').eq('event_code',EVENT_CODE);
+  const request=++seatRequest;
+  const eventCode=EVENT_CODE;
+  seatsReady=false; renderTables();
+  document.getElementById('mainActionBtn').disabled=true;
+  const {data,error}=await sb.from('seats').select('table_no,seat_no,status').eq('event_code',eventCode);
+  if(request!==seatRequest || eventCode!==EVENT_CODE)return;
   if(error){alert('Базаны оқу қатесі: '+error.message);return}
+  seatsReady=true;
+  document.getElementById('mainActionBtn').disabled=actionBusy;
   sold.clear();
   (data||[]).forEach(r=>{if(r.status==='sold') sold.add(code(r.table_no,r.seat_no))});
   [...selected].forEach(c=>{if(sold.has(c)) selected.delete(c)});
@@ -168,6 +193,7 @@ function renderTables(){
           b.disabled=true;
         }
       }
+      if(!seatsReady || actionBusy)b.disabled=true;
       sroot.appendChild(b);
     }
     box.appendChild(sroot); root.appendChild(box);
@@ -202,8 +228,21 @@ function setMode(nextMode){
 }
 
 async function runMainAction(){
-  if(mode==='sell') return confirmSold();
-  return releaseSeats();
+  if(actionBusy || !seatsReady)return;
+  actionBusy=true;
+  document.getElementById('eventSelect').disabled=true;
+  document.getElementById('mainActionBtn').disabled=true;
+  renderTables();
+  try{
+    if(mode==='sell') await confirmSold();
+    else await releaseSeats();
+  }catch(error){alert('Операция аяқталмады: '+error.message);}
+  finally{
+    actionBusy=false;
+    document.getElementById('eventSelect').disabled=false;
+    document.getElementById('mainActionBtn').disabled=!seatsReady;
+    renderTables();
+  }
 }
 
 async function releaseSeats(){
@@ -266,6 +305,8 @@ async function confirmSold(){
   if(error){alert('Сақтау қатесі: '+error.message);return}
 
   const amount=seats.length*PRICE;
+  document.getElementById('tEvent').textContent=activeEvent.name+' • '+activeEvent.date+' '+activeEvent.time;
+  document.getElementById('tVenue').textContent=activeEvent.venue;
   document.getElementById('tName').textContent=name;
   document.getElementById('tId').textContent=id;
   document.getElementById('tSeats').textContent=seats.map(human).join(' • ');
@@ -273,7 +314,7 @@ async function confirmSold(){
   document.getElementById('tPhone').textContent='Телефон: '+phone;
 
   const qr=document.getElementById('qr'); qr.innerHTML='';
-  new QRCode(qr,{text:`QUT TICKET | ${id} | ${name} | ${seats.map(human).join('; ')} | ${amount} KZT`,width:180,height:180});
+  new QRCode(qr,{text:`QUT TICKET | ${EVENT_CODE} | ${activeEvent.name} | ${activeEvent.date} ${activeEvent.time} | ${id} | ${name} | ${seats.map(human).join('; ')} | ${amount} KZT`,width:180,height:180});
 
   document.getElementById('ticket').style.display='block';
   document.getElementById('ticketActions').classList.remove('hidden');
