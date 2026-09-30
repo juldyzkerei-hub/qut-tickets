@@ -1,10 +1,21 @@
 window.QUT_EVENTS = [
   {
+    "code": "QUT-LIVE-20261001",
+    "name": "SETRUS · QARA BALA · AILEND · MERLIN MONRO",
+    "type": "Жанды дауыстағы концерт",
+    "date": "1 қазан 2026",
+    "time": "18:00",
+    "poster": "afisha-live-20261001.svg",
+    "venue": "«Құт» мейрамханасы, Тургут Озала 178, 4-қабат",
+    "price": 5000,
+    "description": "Гитарист: Тумабаев Тимур. Жүргізуші: Темирлан Айтказинов."
+  },
+  {
     "code": "QUT-ASKHAT-20261007",
     "name": "Асхат Қылышбек",
     "type": "Бенефис шоу-концерт",
     "date": "7 қазан 2026",
-    "time": "18:00",
+    "time": "17:30",
     "poster": "afisha-askhat-v2.jpg",
     "venue": "«Құт» мейрамханасы, Тургут Озала 178, 4-қабат",
     "price": 10000
