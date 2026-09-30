@@ -1,11 +1,11 @@
 window.QUT_EVENTS = [
   {
     "code": "QUT-ASKHAT-20261007",
-    "name": "Асхат Қалшбек",
+    "name": "Асхат Қылышбек",
     "type": "Бенефис шоу-концерт",
     "date": "7 қазан 2026",
     "time": "18:00",
-    "poster": "afisha-askhat.jpg",
+    "poster": "afisha-askhat-v2.jpg",
     "venue": "«Құт» мейрамханасы, Тургут Озала 178, 4-қабат",
     "price": 10000
   },
