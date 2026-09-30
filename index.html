@@ -16,6 +16,31 @@
     .hero-content{padding:95px 20px 110px}.eyebrow{text-transform:uppercase;font-size:11px;letter-spacing:4px;font-weight:800;color:var(--gold)}.hero h1{font:600 clamp(62px,13vw,146px)/.95 'Playfair Display',Georgia,serif;letter-spacing:5px;color:#f4dfae;margin:22px 0 8px;text-shadow:0 10px 45px #0008}.hero h2{font:500 clamp(25px,4vw,44px)/1.25 'Playfair Display',Georgia,serif;margin:0 auto 22px;max-width:760px}.hero p{color:#e5d5bb;max-width:570px;margin:0 auto 35px;font-size:15px;line-height:1.8}.ornament{width:70px;height:1px;background:var(--gold);margin:28px auto}
     section{padding:82px 0}.section-top{display:flex;gap:15px;justify-content:space-between;align-items:end;margin-bottom:30px}.section-title{font:600 clamp(33px,6vw,51px)/1.12 'Playfair Display',Georgia,serif;margin:12px 0 0}.grid{display:grid;grid-template-columns:1.06fr .94fr;gap:0;background:var(--panel);border:1px solid #5a482e;border-radius:13px;overflow:hidden;box-shadow:0 22px 80px #0005}.poster{min-height:440px;background:radial-gradient(circle at 50% 18%,#ab8a53 0%,transparent 32%),linear-gradient(155deg,#4e3a23,#151311 65%,#2c2218);display:flex;justify-content:center;align-items:center;text-align:center;padding:36px;position:relative;overflow:hidden}.poster:before,.poster:after{content:"";position:absolute;border:1px solid #d2ae6b55;inset:21px;border-radius:150px 150px 7px 7px}.poster:after{inset:33px;border-color:#d2ae6b44}.poster-inner{position:relative;z-index:1}.poster .mini{font-size:10px;letter-spacing:4px;color:#ead3aa}.poster .big{font:600 clamp(44px,7vw,75px)/1.06 'Playfair Display',Georgia,serif;color:#f9e5b8;margin:25px 0}.poster .spark{font-size:35px;color:#dfb979}.poster .caption{font-size:12px;letter-spacing:3px;color:#e5cf9e;text-transform:uppercase}.details{padding:clamp(28px,5vw,56px);display:flex;flex-direction:column;justify-content:center}.details h3{font:600 clamp(30px,4vw,42px)/1.2 'Playfair Display',Georgia,serif;margin:15px 0}.muted{color:var(--muted);line-height:1.8;font-size:14px}.tags{display:flex;gap:9px;flex-wrap:wrap;margin:15px 0}.tag{border:1px solid #6e5838;border-radius:100px;padding:8px 12px;color:#e8d1a8;font-size:11px}.price{font-size:38px;font-weight:800;margin:24px 0 16px}.price small{font-size:14px;color:#bfb6a5;font-weight:500}.rule{height:1px;background:var(--line);opacity:.8;margin:24px 0}
     .buy{background:linear-gradient(145deg,#241d14,#14120f);border-top:1px solid #5f492a;border-bottom:1px solid #5f492a}.buy-grid{display:grid;grid-template-columns:1fr 1fr;gap:55px;align-items:center}.buy h2{font:600 clamp(32px,5vw,54px) 'Playfair Display',Georgia,serif;margin:15px 0}.purchase{background:#211c15;border:1px solid #715936;border-radius:13px;padding:30px}.line{display:flex;justify-content:space-between;align-items:center;gap:10px}.quantity{display:flex;align-items:center;gap:15px}.quantity button{height:38px;width:38px;border:1px solid #9f8051;background:#352a1b;color:#f9e9c8;border-radius:5px;font-size:21px;cursor:pointer}.quantity span{min-width:21px;text-align:center;font-weight:800}.total{font-size:30px;font-weight:800;color:#f2d294}.purchase .btn{width:100%;margin-top:22px}.note{font-size:11px;line-height:1.7;color:#c4b6a0;margin:15px 0 0}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.step{border-top:1px solid #977443;padding-top:20px}.step strong{font-size:30px;font-family:'Playfair Display',Georgia,serif;color:var(--gold)}.step h3{font-size:15px;margin:16px 0 9px}.step p{color:#bbafa0;line-height:1.7;font-size:13px}footer{border-top:1px solid #493b29;padding:34px 0 45px;color:#ae9f8d;font-size:12px}footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}footer a{text-decoration:underline}
+
+    .seat-map-wrap{margin-top:28px}
+    .seat-legend{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0 22px;font-size:12px;color:var(--muted)}
+    .legend-item{display:flex;align-items:center;gap:7px}
+    .legend-dot{width:16px;height:16px;border-radius:50%;border:1px solid #9f8051;background:#352a1b}
+    .legend-dot.selected{background:var(--gold);border-color:var(--gold)}
+    .legend-dot.sold{background:#4c4740;border-color:#5b554d;opacity:.7}
+    .stage{max-width:520px;margin:0 auto 28px;padding:15px 20px;border:1px solid var(--gold);border-radius:8px;text-align:center;font:700 13px Manrope,Arial,sans-serif;letter-spacing:4px;color:#20180e;background:linear-gradient(180deg,#efd59d,#c99b52);box-shadow:0 10px 35px #0004}
+    .hall-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:18px}
+    .table-card{position:relative;min-height:195px;border:1px solid #665033;border-radius:14px;background:#191611;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px #0006}
+    .table-title{font:700 13px Manrope,Arial,sans-serif;letter-spacing:1px;color:#e8d1a8;margin-bottom:12px}
+    .table-top{width:72px;height:72px;border-radius:12px;background:linear-gradient(145deg,#6a4a2c,#2e2116);border:1px solid #b78b55;display:grid;place-items:center;font:700 21px 'Playfair Display',Georgia,serif;color:#f5ddb0;box-shadow:0 8px 22px #0006}
+    .seats{display:grid;grid-template-columns:repeat(3,38px);grid-template-rows:repeat(2,38px);gap:7px;margin-top:13px}
+    .seat{width:38px;height:38px;border-radius:50%;border:1px solid #9f8051;background:#352a1b;color:#f7e4c2;font-weight:800;cursor:pointer;transition:.18s}
+    .seat:hover{transform:translateY(-1px);filter:brightness(1.1)}
+    .seat.selected{background:var(--gold);color:#20180e;border-color:#f1d89f;box-shadow:0 0 0 3px #d9b77725}
+    .seat.sold{background:#4c4740;color:#8f887d;border-color:#5b554d;cursor:not-allowed;text-decoration:line-through;opacity:.7}
+    .selection-box{margin-top:24px;padding:18px;border:1px solid #705835;border-radius:10px;background:#181510}
+    .selection-list{color:#f2d294;font-weight:700;line-height:1.7;min-height:24px}
+    .selection-meta{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-top:12px;flex-wrap:wrap}
+    .selection-count{color:var(--muted);font-size:13px}
+    .clear-btn{border:0;background:transparent;color:#d7bd8c;text-decoration:underline;cursor:pointer;font:600 12px Manrope,Arial,sans-serif}
+    @media(max-width:900px){.hall-grid{grid-template-columns:repeat(2,minmax(150px,1fr))}}
+    @media(max-width:520px){.hall-grid{grid-template-columns:1fr}.table-card{min-height:180px}}
+
     @media(max-width:750px){.navlinks a:first-child{display:none}.hero{min-height:570px}.hero-content{padding:75px 16px}.grid,.buy-grid{grid-template-columns:1fr}.poster{min-height:370px}.details{padding:30px}.buy-grid{gap:25px}.steps{grid-template-columns:1fr}.section-top{display:block}section{padding:58px 0}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}}
   </style>
@@ -25,34 +50,157 @@
 <main id="top">
   <div class="hero"><div class="hero-content"><div class="eyebrow">QUT RESTAURANT PRESENTS</div><h1>QUT</h1><div class="ornament"></div><h2>Ерекше кештің<br>ерекше атмосферасы</h2><p>Жанды музыка, жақын адамдар және есте қалатын сәттер. Келесі әдемі кешіңіз осы жерден басталады.</p><a class="btn" href="#events">КОНЦЕРТТЕРДІ КӨРУ ↓</a></div></div>
   <section class="wrap" id="events"><div class="section-top"><div><div class="eyebrow">Жақында</div><h2 class="section-title">Акустикалық кеш</h2></div><p class="muted">QUT Restaurant ұсынады</p></div><article class="grid"><div class="poster" aria-label="QUT акустикалық кешінің сәндік афишасы"><div class="poster-inner"><div class="mini">QUT RESTAURANT</div><div class="big">LIVE<br>ACOUSTIC</div><div class="spark">✦</div><div class="caption">Музыкаға толы кеш</div></div></div><div class="details"><div class="eyebrow">Кешке шақырамыз</div><h3>Жанды музыка.<br>Жылы атмосфера.</h3><p class="muted">QUT мейрамханасындағы акустикалық кешке билет алыңыз. Концерттің күні, уақыты және толық бағдарламасы ұйымдастырушымен нақтыланады.</p><div class="tags"><span class="tag">♫ Жанды музыка</span><span class="tag">✦ QUT Restaurant</span></div><div class="rule"></div><div class="muted">Бір билет бағасы</div><div class="price">10 000 ₸</div><a href="#tickets" class="btn">БИЛЕТ САТЫП АЛУ ↗</a></div></article></section>
-  <section class="buy" id="tickets"><div class="wrap buy-grid"><div><div class="eyebrow">Өзіңізге орын дайындаңыз</div><h2>Кешіңізді дәл қазір жоспарлаңыз</h2><p class="muted">Билет санын таңдап, жалпы соманы көріңіз. Төлеу батырмасы Құт мейрамханасының Kaspi төлем сілтемесін ашады.</p></div><div class="purchase"><div class="line"><strong>Акустикалық кеш</strong><span>10 000 ₸ / билет</span></div><div class="rule"></div><div class="line"><span>Билет саны</span><div class="quantity"><button type="button" onclick="changeQty(-1)" aria-label="Билет санын азайту">−</button><span id="qty" aria-live="polite">1</span><button type="button" onclick="changeQty(1)" aria-label="Билет санын көбейту">+</button></div></div><div class="rule"></div><div class="line"><strong>Жалпы сома</strong><div class="total" id="total" aria-live="polite">10 000 ₸</div></div><a class="btn" id="kaspiBtn" href="https://pay.kaspi.kz/pay/esljdaq6" target="_blank" rel="noopener noreferrer">KASPI АРҚЫЛЫ ТӨЛЕУ ↗</a><p class="note">Kaspi беті ашылғанда жоғарыда көрсетілген жалпы соманы төлеңіз. Қазір төлем сомасы Kaspi-ге автоматты берілмейді.</p><a class="btn outline" id="confirmBtn" style="width:100%;margin-top:12px" href="#" target="_blank" rel="noopener noreferrer">✓ ТӨЛЕМ ЖАСАДЫМ — РАСТАУ</a><p class="note">Растау батырмасы WhatsApp-ты ашады. Билет саны мен жалпы сома хабарламаға автоматты түрде жазылады. Ұйымдастырушы Kaspi Pay-ден төлемді тексергеннен кейін билетіңізді растайды.</p></div></div></section>
-  <section class="wrap" id="how"><div class="eyebrow">Барлығы түсінікті</div><h2 class="section-title" style="margin-bottom:35px">Билетті қалай аламын?</h2><div class="steps"><div class="step"><strong>01</strong><h3>Билет санын таңдаңыз</h3><p>Өзіңізге және достарыңызға керекті билет санын белгілеңіз.</p></div><div class="step"><strong>02</strong><h3>Kaspi арқылы төлеңіз</h3><p>Kaspi бетінде соманы тексеріп, төлем жасаңыз.</p></div><div class="step"><strong>03</strong><h3>Билетіңізді растаңыз</h3><p>Қазір төлемнен кейін ұйымдастырушымен WhatsApp арқылы байланысыңыз. Автоматты QR-билет жүйесі кейін қосылады.</p></div></div></section>
+  <section class="buy" id="tickets"><div class="wrap buy-grid"><div><div class="eyebrow">Өзіңізге орын дайындаңыз</div><h2>Кешіңізді дәл қазір жоспарлаңыз</h2><p class="muted">16 үстелдің бірін таңдап, өзіңізге қажетті орындарды белгілеңіз. Әр үстелде 6 орын бар. Таңдалған орындар бойынша жалпы сома автоматты есептеледі.</p></div><div class="purchase">
+  <div class="line"><strong>Акустикалық кеш</strong><span>10 000 ₸ / орын</span></div>
+  <div class="rule"></div>
+  <div class="seat-map-wrap">
+    <div class="stage">САХНА</div>
+    <div class="seat-legend">
+      <div class="legend-item"><span class="legend-dot"></span> Бос орын</div>
+      <div class="legend-item"><span class="legend-dot selected"></span> Таңдалған</div>
+      <div class="legend-item"><span class="legend-dot sold"></span> Сатылған</div>
+    </div>
+    <div class="hall-grid" id="hallGrid" aria-label="Залдағы орындарды таңдау"></div>
+  </div>
+  <div class="selection-box">
+    <div><strong>Таңдалған орындар</strong></div>
+    <div class="selection-list" id="selectionList">Әзірге орын таңдалмады</div>
+    <div class="selection-meta">
+      <div class="selection-count" id="selectionCount">0 орын</div>
+      <button class="clear-btn" type="button" onclick="clearSelection()">Таңдауды тазалау</button>
+    </div>
+    <div class="rule"></div>
+    <div class="line"><strong>Жалпы сома</strong><div class="total" id="total" aria-live="polite">0 ₸</div></div>
+  </div>
+  <a class="btn" id="kaspiBtn" href="https://pay.kaspi.kz/pay/esljdaq6" target="_blank" rel="noopener noreferrer">KASPI АРҚЫЛЫ ТӨЛЕУ ↗</a>
+  <p class="note">Алдымен кемінде бір орын таңдаңыз. Kaspi беті ашылғанда сайтта көрсетілген жалпы соманы төлеңіз. Сома Kaspi-ге автоматты берілмейді.</p>
+  <a class="btn outline" id="confirmBtn" style="width:100%;margin-top:12px;pointer-events:none;opacity:.55" href="#" target="_blank" rel="noopener noreferrer">✓ ТӨЛЕМ ЖАСАДЫМ — РАСТАУ</a>
+  <p class="note">Растау батырмасы WhatsApp-ты ашады. Үстел, орын және жалпы сома хабарламаға автоматты түрде жазылады. Ұйымдастырушы Kaspi Pay-ден төлемді тексергеннен кейін броньды растайды.</p>
+</div></div></section>
+  <section class="wrap" id="how"><div class="eyebrow">Барлығы түсінікті</div><h2 class="section-title" style="margin-bottom:35px">Билетті қалай аламын?</h2><div class="steps"><div class="step"><strong>01</strong><h3>Үстел мен орынды таңдаңыз</h3><p>16 үстелдің ішінен өзіңізге ұнаған үстелді және 1–6 орынның бірін немесе бірнешеуін белгілеңіз.</p></div><div class="step"><strong>02</strong><h3>Kaspi арқылы төлеңіз</h3><p>Сайттағы жалпы соманы қарап, Kaspi бетінде дәл сол соманы төлеңіз.</p></div><div class="step"><strong>03</strong><h3>Орынды растаңыз</h3><p>«Төлем жасадым» батырмасы WhatsApp-та үстел мен орындарды автоматты жазады. Ұйымдастырушы төлемді тексеріп, броньды растайды.</p></div></div></section>
 </main>
 <footer><div class="wrap"><div><span class="brand" style="font-size:22px">QUT</span><br>Кешіңіз ерекше өтсін.</div><div>Байланыс: <a href="tel:+77003441472">+7 700 344 14 72</a><br><br>© <span id="year"></span> QUT Restaurant</div></div></footer>
 <script>
-  let count=1;
   const price=10000;
   const whatsappNumber='77003441472';
+  const selectedSeats=new Set();
+
+  // Кейін нақты сатылған орындар белгілі болғанда:
+  // мысалы const soldSeats=new Set(['1-1','1-2','5-4']);
+  const soldSeats=new Set([]);
 
   function formatMoney(value){
     return new Intl.NumberFormat('kk-KZ').format(value)+' ₸';
   }
 
-  function updateWhatsAppLink(){
-    const total=count*price;
-    const message=`Сәлеметсіз бе! QUT акустикалық кешіне ${count} билет үшін ${formatMoney(total)} төледім. Төлемді Kaspi Pay арқылы жасадым. Төлемді тексеріп, билетімді растап жіберуіңізді өтінемін.`;
-    document.getElementById('confirmBtn').href=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+  function seatCode(table, seat){
+    return `${table}-${seat}`;
   }
 
-  function changeQty(diff){
-    count=Math.min(20,Math.max(1,count+diff));
-    document.getElementById('qty').textContent=count;
-    document.getElementById('total').textContent=formatMoney(count*price);
-    updateWhatsAppLink();
+  function renderHall(){
+    const hall=document.getElementById('hallGrid');
+    hall.innerHTML='';
+
+    for(let table=1; table<=16; table++){
+      const card=document.createElement('div');
+      card.className='table-card';
+
+      const title=document.createElement('div');
+      title.className='table-title';
+      title.textContent=`ҮСТЕЛ ${String(table).padStart(2,'0')}`;
+
+      const top=document.createElement('div');
+      top.className='table-top';
+      top.textContent=String(table).padStart(2,'0');
+
+      const seats=document.createElement('div');
+      seats.className='seats';
+
+      for(let seat=1; seat<=6; seat++){
+        const btn=document.createElement('button');
+        btn.type='button';
+        btn.className='seat';
+        btn.textContent=seat;
+        btn.setAttribute('aria-label',`Үстел ${table}, орын ${seat}`);
+
+        const code=seatCode(table,seat);
+
+        if(soldSeats.has(code)){
+          btn.classList.add('sold');
+          btn.disabled=true;
+        } else {
+          btn.addEventListener('click',()=>toggleSeat(code,btn));
+        }
+        seats.appendChild(btn);
+      }
+
+      card.appendChild(title);
+      card.appendChild(top);
+      card.appendChild(seats);
+      hall.appendChild(card);
+    }
+  }
+
+  function toggleSeat(code,button){
+    if(selectedSeats.has(code)){
+      selectedSeats.delete(code);
+      button.classList.remove('selected');
+    }else{
+      selectedSeats.add(code);
+      button.classList.add('selected');
+    }
+    updateSelection();
+  }
+
+  function clearSelection(){
+    selectedSeats.clear();
+    document.querySelectorAll('.seat.selected').forEach(el=>el.classList.remove('selected'));
+    updateSelection();
+  }
+
+  function sortedSelection(){
+    return [...selectedSeats].sort((a,b)=>{
+      const [ta,sa]=a.split('-').map(Number);
+      const [tb,sb]=b.split('-').map(Number);
+      return ta===tb ? sa-sb : ta-tb;
+    });
+  }
+
+  function humanSeat(code){
+    const [table,seat]=code.split('-');
+    return `Үстел ${Number(table)}, орын ${Number(seat)}`;
+  }
+
+  function updateSelection(){
+    const list=sortedSelection();
+    const count=list.length;
+    const total=count*price;
+
+    document.getElementById('selectionList').textContent =
+      count ? list.map(humanSeat).join(' • ') : 'Әзірге орын таңдалмады';
+
+    document.getElementById('selectionCount').textContent=`${count} орын`;
+    document.getElementById('total').textContent=formatMoney(total);
+
+    const confirmBtn=document.getElementById('confirmBtn');
+
+    if(count){
+      const seatsText=list.map(humanSeat).join(', ');
+      const message=`Сәлеметсіз бе! QUT акустикалық кешіне ${count} орын үшін ${formatMoney(total)} төледім. Таңдаған орындарым: ${seatsText}. Төлемді Kaspi Pay арқылы жасадым. Төлемді тексеріп, броньымды растауыңызды өтінемін.`;
+
+      confirmBtn.href=`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+      confirmBtn.style.pointerEvents='auto';
+      confirmBtn.style.opacity='1';
+    }else{
+      confirmBtn.href='#';
+      confirmBtn.style.pointerEvents='none';
+      confirmBtn.style.opacity='.55';
+    }
   }
 
   document.getElementById('year').textContent=new Date().getFullYear();
-  updateWhatsAppLink();
+  renderHall();
+  updateSelection();
 </script>
 </body>
 </html>
