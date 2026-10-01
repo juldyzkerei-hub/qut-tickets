@@ -1,47 +1,23 @@
-<!doctype html>
-<html lang="kk">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>QUT билет</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<style>
-:root{--bg:#0e0d0b;--gold:#d9b777;--muted:#b9aa96}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f8f2e8;font-family:Arial,sans-serif}.wrap{max-width:620px;margin:auto;padding:24px 16px}.brand{font-size:30px;font-weight:900;letter-spacing:5px;color:var(--gold);text-align:center}.ticket{margin-top:20px;background:#f8f2e8;color:#20180e;border-radius:18px;padding:24px;box-shadow:0 18px 70px #0008}.label{font-size:11px;letter-spacing:1px;color:#6c6257}.big{font-size:22px;font-weight:900;margin:4px 0 16px}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.qr{display:flex;justify-content:center;margin-top:20px}.muted{color:#776d62;font-size:12px;line-height:1.5}.error{padding:20px;border:1px solid #754a4a;border-radius:12px;color:#f2b4b4;margin-top:20px}
-@media(max-width:520px){.row{grid-template-columns:1fr}}
-</style></head>
-<body><div class="wrap">
-<div class="brand">QUT</div>
-<div id="loading" style="text-align:center;color:var(--muted);margin-top:30px">Билет жүктелуде...</div>
-<div id="card" class="ticket" style="display:none">
-<div class="label">КЕШ</div><div class="big" id="event"></div>
-<div id="venue" class="muted"></div>
-<hr style="border:0;border-top:1px solid #d8cdbd;margin:18px 0">
-<div class="row">
-<div><div class="label">ҚОНАҚ</div><div class="big" id="name"></div></div>
-<div><div class="label">БИЛЕТ №</div><div id="id"></div></div>
-</div>
-<div class="label">ОРЫНДАР</div><div class="big" id="seats"></div>
-<div class="label">СОМА</div><div class="big" id="amount"></div>
-<div class="qr" id="qr"></div>
-<p class="muted" style="text-align:center">Кіру кезінде осы билетті көрсетіңіз.</p>
-</div>
-<div id="error" class="error" style="display:none"></div>
-</div>
+<!doctype html><html lang="kk"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>QUT билет</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>body{margin:0;background:#0e0d0b;color:#f8f2e8;font-family:Arial,sans-serif}.wrap{max-width:620px;margin:auto;padding:24px 16px}.brand{font-size:32px;font-weight:900;letter-spacing:6px;color:#d9b777;text-align:center}.ticket{margin-top:24px;background:#f8f2e8;color:#20180e;border-radius:18px;padding:24px}.label{font-size:11px;color:#6c6257}.big{font-size:22px;font-weight:800;margin:5px 0 16px}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}.qr{display:flex;justify-content:center;margin-top:20px}.msg{text-align:center;margin-top:28px;color:#b9aa96}@media(max-width:520px){.row{grid-template-columns:1fr}}</style></head>
+<body><div class="wrap"><div class="brand">QUT</div><div id="loading" class="msg">Билет жүктелуде...</div><div id="card" class="ticket" hidden>
+<div class="label">КЕШ</div><div class="big" id="ev"></div><div id="venue"></div><hr>
+<div class="row"><div><div class="label">ҚОНАҚ</div><div class="big" id="guest"></div></div><div><div class="label">БИЛЕТ №</div><div id="tid"></div></div></div>
+<div class="label">ОРЫНДАР</div><div class="big" id="seats"></div><div class="label">СОМА</div><div class="big" id="amount"></div><div id="qr" class="qr"></div><p class="msg" style="color:#6c6257">Кіру кезінде осы билетті көрсетіңіз.</p></div><div id="err" class="msg"></div></div>
 <script>
-const sb=window.supabase.createClient('https://bsdbkzopylzghywassii.supabase.co','sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg');
-const money=n=>new Intl.NumberFormat('kk-KZ').format(n)+' ₸';
-(async()=>{
- const ticketId=new URLSearchParams(location.search).get('id');
- if(!ticketId){loading.style.display='none';error.style.display='block';error.textContent='Билет нөмірі табылмады.';return}
- const {data,error:err}=await sb.rpc('get_ticket',{p_ticket_id:ticketId});
- loading.style.display='none';
- const t=data&&data[0];
- if(err||!t||t.status!=='valid'){error.style.display='block';error.textContent='Билет табылмады немесе жарамсыз.';return}
- event.textContent=t.event_name+' • '+(t.event_date||'')+' '+(t.event_time||'');
- venue.textContent=t.venue||'';name.textContent=t.customer_name||'Қонақ';id.textContent=t.id;
- seats.textContent=(t.seats||[]).map(x=>x.table_no+'-үстел, '+x.seat_no+'-орын').join(' • ');
- amount.textContent=money(t.amount||0);card.style.display='block';
- new QRCode(qr,{text:location.href,width:190,height:190});
-})();
-</script></body></html>
+(async function(){
+ const g=x=>document.getElementById(x),load=g('loading'),card=g('card'),err=g('err');
+ try{
+  const id=new URLSearchParams(window.location.search).get('id');
+  if(!id) throw new Error('Билет нөмірі табылмады');
+  const sb=window.supabase.createClient('https://bsdbkzopylzghywassii.supabase.co','sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg');
+  const r=await sb.rpc('get_ticket',{p_ticket_id:id}),t=r.data&&r.data[0];
+  if(r.error||!t||t.status!=='valid') throw new Error('Билет табылмады');
+  g('ev').textContent=t.event_name+' • '+(t.event_date||'')+' '+(t.event_time||'');
+  g('venue').textContent=t.venue||'';g('guest').textContent=t.customer_name||'Қонақ';g('tid').textContent=t.id;
+  g('seats').textContent=(t.seats||[]).map(x=>x.table_no+'-үстел, '+x.seat_no+'-орын').join(' • ');
+  g('amount').textContent=new Intl.NumberFormat('kk-KZ').format(t.amount||0)+' ₸';
+  load.hidden=true;card.hidden=false;if(window.QRCode)new QRCode(g('qr'),{text:window.location.href,width:190,height:190});
+ }catch(e){load.hidden=true;err.textContent=e.message||'Билетті ашу қатесі';}
+})();</script></body></html>
