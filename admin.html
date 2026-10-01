@@ -27,7 +27,7 @@ label{display:block;font-size:12px;color:#e8d1a8;margin:12px 0 6px}input,select{
 <h3>Админге кіру</h3>
 <label>Email</label><input id="email" type="email">
 <label>Құпиясөз</label><input id="password" type="password">
-<div class="actions"><button class="btn" id="loginBtn">КІРУ</button></div>
+<div class="actions"><button class="btn" id="loginBtn" type="button" onclick="signIn()">КІРУ</button></div>
 <div id="loginMsg" class="muted"></div>
 </div>
 
@@ -68,8 +68,9 @@ label{display:block;font-size:12px;color:#e8d1a8;margin:12px 0 6px}input,select{
 </div>
 <script src="events.js?v=20261001-004"></script>
 <script>
-const URL='https://bsdbkzopylzghywassii.supabase.co',KEY='sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg';
-const sb=window.supabase.createClient(URL,KEY),events=window.QUT_EVENTS;
+const SUPABASE_URL='https://bsdbkzopylzghywassii.supabase.co';
+const SUPABASE_KEY='sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg';
+const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY),events=window.QUT_EVENTS;
 const caps={1:6,2:6,3:6,4:4,5:4,6:6,7:4,8:6,9:4,10:4,11:4,12:4,13:6,14:6,15:6,16:6,17:6,18:6,19:6,20:6,21:6,22:6,23:6};
 let active=events[0],statuses=new Map(),selected=new Set();
 
@@ -165,7 +166,6 @@ function showTicket(id,name,phone,seats,amount){
 }
 els.eventSelect.innerHTML=events.map(e=>'<option value="'+e.code+'">'+e.name+' — '+e.date+', '+e.time+'</option>').join('');
 els.eventSelect.onchange=e=>changeEvent(e.target.value);
-els.loginBtn.onclick=signIn;
 els.refreshBtn.onclick=()=>Promise.all([loadSeats(),loadPending()]);
 els.manualSellBtn.onclick=manualSell;
 els.clearBtn.onclick=()=>{selected.clear();renderTables()};
