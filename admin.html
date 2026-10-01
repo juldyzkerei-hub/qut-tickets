@@ -72,24 +72,73 @@ const URL='https://bsdbkzopylzghywassii.supabase.co',KEY='sb_publishable_Sktu6sR
 const sb=window.supabase.createClient(URL,KEY),events=window.QUT_EVENTS;
 const caps={1:6,2:6,3:6,4:4,5:4,6:6,7:4,8:6,9:4,10:4,11:4,12:4,13:6,14:6,15:6,16:6,17:6,18:6,19:6,20:6,21:6,22:6,23:6};
 let active=events[0],statuses=new Map(),selected=new Set();
+
+const els={
+  login:document.getElementById('login'),
+  area:document.getElementById('area'),
+  email:document.getElementById('email'),
+  password:document.getElementById('password'),
+  loginBtn:document.getElementById('loginBtn'),
+  loginMsg:document.getElementById('loginMsg'),
+  eventSelect:document.getElementById('eventSelect'),
+  eventInfo:document.getElementById('eventInfo'),
+  pending:document.getElementById('pending'),
+  tables:document.getElementById('tables'),
+  manualSelection:document.getElementById('manualSelection'),
+  clientName:document.getElementById('clientName'),
+  clientPhone:document.getElementById('clientPhone'),
+  refreshBtn:document.getElementById('refreshBtn'),
+  manualSellBtn:document.getElementById('manualSellBtn'),
+  clearBtn:document.getElementById('clearBtn'),
+  logoutBtn:document.getElementById('logoutBtn'),
+  ticketCard:document.getElementById('ticketCard'),
+  tEvent:document.getElementById('tEvent'),
+  tVenue:document.getElementById('tVenue'),
+  tName:document.getElementById('tName'),
+  tId:document.getElementById('tId'),
+  tSeats:document.getElementById('tSeats'),
+  tAmount:document.getElementById('tAmount'),
+  qr:document.getElementById('qr'),
+  ticketLink:document.getElementById('ticketLink'),
+  waLink:document.getElementById('waLink')
+};
+
 const money=n=>new Intl.NumberFormat('kk-KZ').format(n)+' ₸',code=(t,s)=>t+'-'+s;
 function human(c){const [t,s]=c.split('-');return t+'-үстел, '+s+'-орын'}
 function seatsJson(){return [...selected].map(c=>{const [t,s]=c.split('-').map(Number);return {table_no:t,seat_no:s}})}
-async function signIn(){const {error}=await sb.auth.signInWithPassword({email:email.value.trim(),password:password.value});loginMsg.textContent=error?error.message:'Кіру сәтті';if(!error)init()}
-async function init(){const {data:{session}}=await sb.auth.getSession();if(!session)return;login.classList.add('hidden');area.classList.remove('hidden');await changeEvent(active.code)}
-async function changeEvent(c){active=events.find(e=>e.code===c)||events[0];eventInfo.textContent=active.name+' • '+active.date+' • '+active.time;selected.clear();await Promise.all([loadSeats(),loadPending()])}
+async function signIn(){
+  els.loginBtn.disabled=true;
+  els.loginMsg.textContent='Кіріп жатыр...';
+  try{
+    const {error}=await sb.auth.signInWithPassword({email:els.email.value.trim(),password:els.password.value});
+    els.loginMsg.textContent=error?error.message:'Кіру сәтті';
+    if(!error) await init();
+  }catch(e){
+    els.loginMsg.textContent='Кіру қатесі: '+(e?.message||e);
+  }finally{
+    els.loginBtn.disabled=false;
+  }
+}
+async function init(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session)return;
+  els.login.classList.add('hidden');
+  els.area.classList.remove('hidden');
+  await changeEvent(active.code);
+}
+async function changeEvent(c){active=events.find(e=>e.code===c)||events[0];els.eventInfo.textContent=active.name+' • '+active.date+' • '+active.time;selected.clear();await Promise.all([loadSeats(),loadPending()])}
 async function loadSeats(){
  const {data,error}=await sb.rpc('get_seat_statuses',{p_event_code:active.code});if(error){alert(error.message);return}
  statuses.clear();(data||[]).forEach(r=>statuses.set(code(r.table_no,r.seat_no),r.status));renderTables()
 }
-function renderTables(){tables.innerHTML='';for(let t=1;t<=23;t++){const box=document.createElement('div');box.className='table';box.innerHTML='<b>'+t+'-үстел · '+caps[t]+' орын</b>';const sr=document.createElement('div');sr.className='seats';for(let s=1;s<=caps[t];s++){const c=code(t,s),st=statuses.get(c)||'available',b=document.createElement('button');b.className='seat';b.textContent=s;b.type='button';if(st==='sold'){b.classList.add('sold');b.disabled=true}else if(st==='held'){b.classList.add('held');b.disabled=true}else{if(selected.has(c))b.classList.add('selected');b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateManual()}}sr.appendChild(b)}box.appendChild(sr);tables.appendChild(box)}updateManual()}
-function updateManual(){manualSelection.textContent=selected.size?[...selected].sort().map(human).join(' • '):'Орын таңдалмады'}
+function renderTables(){els.tables.innerHTML='';for(let t=1;t<=23;t++){const box=document.createElement('div');box.className='table';box.innerHTML='<b>'+t+'-үстел · '+caps[t]+' орын</b>';const sr=document.createElement('div');sr.className='seats';for(let s=1;s<=caps[t];s++){const c=code(t,s),st=statuses.get(c)||'available',b=document.createElement('button');b.className='seat';b.textContent=s;b.type='button';if(st==='sold'){b.classList.add('sold');b.disabled=true}else if(st==='held'){b.classList.add('held');b.disabled=true}else{if(selected.has(c))b.classList.add('selected');b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateManual()}}sr.appendChild(b)}box.appendChild(sr);els.tables.appendChild(box)}updateManual()}
+function updateManual(){els.manualSelection.textContent=selected.size?[...selected].sort().map(human).join(' • '):'Орын таңдалмады'}
 async function loadPending(){
  const {data,error}=await sb.from('booking_requests').select('*').eq('event_code',active.code).eq('status','pending').order('created_at',{ascending:true});
- if(error){pending.innerHTML='<div class="muted">'+error.message+'</div>';return}
- pending.innerHTML='';
- if(!data?.length){pending.innerHTML='<div class="muted">Растауды күтіп тұрған бронь жоқ.</div>';return}
- data.forEach(r=>{const d=document.createElement('div');d.className='req';const seats=(r.seats||[]).map(x=>x.table_no+'-үстел '+x.seat_no+'-орын').join(', ');d.innerHTML='<b>'+r.customer_name+'</b><br>'+r.customer_phone+'<br>'+seats+'<br><b>'+money(r.amount)+'</b><br><small>'+new Date(r.created_at).toLocaleString('kk-KZ')+'</small><div class="actions"><button class="btn">ТӨЛЕМ ТҮСТІ — РАСТАУ</button><button class="btn danger">БОЛДЫРМАУ</button></div>';const [ok,no]=d.querySelectorAll('button');ok.onclick=()=>confirmRequest(r);no.onclick=()=>cancelRequest(r);pending.appendChild(d)})
+ if(error){els.pending.innerHTML='<div class="muted">'+error.message+'</div>';return}
+ els.pending.innerHTML='';
+ if(!data?.length){els.pending.innerHTML='<div class="muted">Растауды күтіп тұрған бронь жоқ.</div>';return}
+ data.forEach(r=>{const d=document.createElement('div');d.className='req';const seats=(r.seats||[]).map(x=>x.table_no+'-үстел '+x.seat_no+'-орын').join(', ');d.innerHTML='<b>'+r.customer_name+'</b><br>'+r.customer_phone+'<br>'+seats+'<br><b>'+money(r.amount)+'</b><br><small>'+new Date(r.created_at).toLocaleString('kk-KZ')+'</small><div class="actions"><button class="btn">ТӨЛЕМ ТҮСТІ — РАСТАУ</button><button class="btn danger">БОЛДЫРМАУ</button></div>';const [ok,no]=d.querySelectorAll('button');ok.onclick=()=>confirmRequest(r);no.onclick=()=>cancelRequest(r);els.pending.appendChild(d)})
 }
 async function confirmRequest(r){
  if(!confirm(r.customer_name+' төлемі Kaspi-де түскенін тексердіңіз бе?'))return;
@@ -100,22 +149,27 @@ async function confirmRequest(r){
 async function cancelRequest(r){if(!confirm('Броньды босатамыз ба?'))return;const {error}=await sb.rpc('release_hold',{p_hold_token:r.hold_token});if(error)alert(error.message);await Promise.all([loadSeats(),loadPending()])}
 async function manualSell(){
  if(!selected.size){alert('Орын таңдаңыз');return}
- const name=clientName.value.trim()||'Қонақ',phone=clientPhone.value.trim(),arr=seatsJson(),amount=arr.length*active.price;
+ const name=els.clientName.value.trim()||'Қонақ',phone=els.clientPhone.value.trim(),arr=seatsJson(),amount=arr.length*active.price;
  const {data,error}=await sb.rpc('admin_sell_seats',{p_event_code:active.code,p_seats:arr,p_customer_name:name,p_customer_phone:phone,p_amount:amount,p_event_name:active.name,p_event_date:active.date,p_event_time:active.time,p_venue:active.venue});
  if(error){alert(error.message);return}
  showTicket(data,name,phone,arr,amount);selected.clear();await loadSeats()
 }
 function showTicket(id,name,phone,seats,amount){
  const list=(seats||[]).map(x=>x.table_no+'-үстел, '+x.seat_no+'-орын').join(' • ');
- tEvent.textContent=active.name+' • '+active.date+' '+active.time;tVenue.textContent=active.venue;tName.textContent=name;tId.textContent=id;tSeats.textContent=list;tAmount.textContent=money(amount);
- qr.innerHTML='';new QRCode(qr,{text:location.origin+'/ticket.html?id='+id,width:180,height:180});
- const link=location.origin+'/ticket.html?id='+id;ticketLink.href=link;
+ els.tEvent.textContent=active.name+' • '+active.date+' '+active.time;els.tVenue.textContent=active.venue;els.tName.textContent=name;els.tId.textContent=id;els.tSeats.textContent=list;els.tAmount.textContent=money(amount);
+ els.qr.innerHTML='';new QRCode(els.qr,{text:location.origin+'/ticket.html?id='+id,width:180,height:180});
+ const link=location.origin+'/ticket.html?id='+id;els.ticketLink.href=link;
  const msg='Сәлеметсіз бе, '+name+'! QUT билеті дайын. '+active.name+'. Орындар: '+list+'. Билет: '+link;
- waLink.href='https://wa.me/'+String(phone||'').replace(/\D/g,'')+'?text='+encodeURIComponent(msg);
- ticketCard.classList.remove('hidden');ticketCard.scrollIntoView({behavior:'smooth'})
+ els.waLink.href='https://wa.me/'+String(phone||'').replace(/\D/g,'')+'?text='+encodeURIComponent(msg);
+ els.ticketCard.classList.remove('hidden');els.ticketCard.scrollIntoView({behavior:'smooth'})
 }
-eventSelect.innerHTML=events.map(e=>'<option value="'+e.code+'">'+e.name+' — '+e.date+', '+e.time+'</option>').join('');
-eventSelect.onchange=e=>changeEvent(e.target.value);loginBtn.onclick=signIn;refreshBtn.onclick=()=>Promise.all([loadSeats(),loadPending()]);manualSellBtn.onclick=manualSell;clearBtn.onclick=()=>{selected.clear();renderTables()};logoutBtn.onclick=async()=>{await sb.auth.signOut();location.reload()};
+els.eventSelect.innerHTML=events.map(e=>'<option value="'+e.code+'">'+e.name+' — '+e.date+', '+e.time+'</option>').join('');
+els.eventSelect.onchange=e=>changeEvent(e.target.value);
+els.loginBtn.onclick=signIn;
+els.refreshBtn.onclick=()=>Promise.all([loadSeats(),loadPending()]);
+els.manualSellBtn.onclick=manualSell;
+els.clearBtn.onclick=()=>{selected.clear();renderTables()};
+els.logoutBtn.onclick=async()=>{await sb.auth.signOut();location.reload()};
 init();
 </script>
 </body></html>
