@@ -3,331 +3,119 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0e0d0b">
-<title>QUT Tickets — Admin</title>
+<title>QUT ADMIN</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <style>
 :root{--bg:#0e0d0b;--panel:#1b1915;--gold:#d9b777;--muted:#c2baae;--line:#5c4a30}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f8f2e8;font-family:Arial,sans-serif}
-.wrap{max-width:980px;margin:auto;padding:24px 16px}.brand{font-size:28px;font-weight:800;letter-spacing:4px;color:var(--gold)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:18px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.muted{color:var(--muted);line-height:1.6}
-label{display:block;font-size:12px;color:#e8d1a8;margin:12px 0 6px}
-input{width:100%;padding:12px;border-radius:8px;border:1px solid #6e5838;background:#15120f;color:#fff}
-.btn{border:1px solid var(--gold);background:var(--gold);color:#20180e;font-weight:800;border-radius:8px;padding:12px 16px;cursor:pointer}
-.btn.outline{background:transparent;color:#f2deb9}.btn.danger{background:#442728;color:#f7d6d6;border-color:#7e4b4d}
-.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-.tables{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}
-.table{border:1px solid #665033;border-radius:12px;padding:12px;text-align:center;background:#15120f}
-.table strong{display:block;color:#e8d1a8;margin-bottom:9px}
-.seats{display:grid;grid-template-columns:repeat(3,38px);gap:7px;justify-content:center}
-.seat{width:38px;height:38px;border-radius:50%;border:1px solid #9f8051;background:#352a1b;color:#f7e4c2;font-weight:800;cursor:pointer}
-.seat.selected{background:var(--gold);color:#20180e}
-.seat.sold{background:#4c4740;color:#8f887d;border-color:#5b554d}
-.ticket{display:none;background:#f8f2e8;color:#20180e;border-radius:18px;padding:24px;margin-top:18px}
-.ticket .row{display:flex;justify-content:space-between;gap:16px;margin:16px 0}.big{font-size:24px;font-weight:800}
-#qr{display:flex;justify-content:center;margin-top:16px}
-.hidden{display:none!important}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.tables{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:430px){.tables{grid-template-columns:1fr}}
-@media print{body{background:#fff}.no-print{display:none!important}.ticket{display:block!important;margin:0}}
-select{width:100%;padding:12px;background:#15120f;color:#fff;border:1px solid #6e5838;border-radius:8px;font:inherit}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f8f2e8;font-family:Arial,sans-serif}.wrap{max-width:1050px;margin:auto;padding:24px 16px}.brand{font-size:28px;font-weight:800;letter-spacing:4px;color:var(--gold)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:18px}.muted{color:var(--muted);line-height:1.6}
+label{display:block;font-size:12px;color:#e8d1a8;margin:12px 0 6px}input,select{width:100%;padding:12px;border-radius:8px;border:1px solid #6e5838;background:#15120f;color:#fff}
+.btn{border:1px solid var(--gold);background:var(--gold);color:#20180e;font-weight:800;border-radius:8px;padding:12px 16px;cursor:pointer}.btn.outline{background:transparent;color:#f2deb9}.btn.danger{background:#442728;color:#f7d6d6;border-color:#7e4b4d}.btn:disabled{opacity:.45}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.hidden{display:none!important}
+.pending{display:grid;gap:10px}.req{border:1px solid #6e5838;border-radius:10px;padding:13px;background:#15120f}.req b{color:#f2d294}.req small{color:#bfb3a2}
+.tables{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.table{border:1px solid #665033;border-radius:12px;padding:12px;background:#15120f}.seats{display:flex;gap:7px;flex-wrap:wrap}.seat{width:38px;height:38px;border-radius:50%;border:1px solid #9f8051;background:#352a1b;color:#fff;font-weight:800}.seat.selected{background:var(--gold);color:#20180e}.seat.sold{background:#4c4740;color:#8f887d}.seat.held{background:#8d652d}
+.ticket{background:#f8f2e8;color:#20180e;border-radius:18px;padding:24px;margin-top:18px}.ticket .row{display:flex;justify-content:space-between;gap:16px;margin:16px 0}.big{font-size:22px;font-weight:800}#qr{display:flex;justify-content:center;margin-top:16px}
+@media(max-width:760px){.tables{grid-template-columns:repeat(2,1fr)}}@media(max-width:430px){.tables{grid-template-columns:1fr}}
 </style>
 </head>
-<body>
-<div class="wrap">
-  <div class="brand">QUT ADMIN</div>
-  <div class="muted">Төлемді Kaspi Pay-ден тексергеннен кейін ғана орынды «Сатылды» деп растаңыз.</div>
+<body><div class="wrap">
+<div class="brand">QUT ADMIN</div>
+<p class="muted">Клиент төлем жасаған соң осы жерден броньды растайсыз. Растаған сәтте орын «Сатылды» болады және дайын билет сілтемесі шығады.</p>
 
-  <div id="loginCard" class="card">
-    <h3>Админге кіру</h3>
-    <label>Email</label><input id="email" type="email" placeholder="admin@qut.kz">
-    <label>Құпиясөз</label><input id="password" type="password" placeholder="••••••••">
-    <div class="actions"><button class="btn" onclick="signIn()">КІРУ</button></div>
-    <div class="muted" id="loginMsg"></div>
-  </div>
-
-  <div id="adminArea" class="hidden"><div class="card no-print"><label for="eventSelect">Кешті таңдаңыз</label><select id="eventSelect" onchange="changeEvent(this.value)"></select><p id="adminEventInfo" class="muted"></p></div>
-    <div class="card no-print">
-      <div class="grid">
-        <div>
-          <h3>1. Клиент деректері</h3>
-          <label>Клиент аты</label><input id="clientName" placeholder="Мысалы: Айдана">
-          <label>Телефон</label><input id="clientPhone" placeholder="+7 700 000 00 00">
-        </div>
-        <div>
-          <h3>2. Орындарды таңдаңыз</h3>
-          <div class="muted" id="selectionText">Орын таңдалмады</div>
-          <div class="actions">
-            <button class="btn" id="sellModeBtn" onclick="setMode('sell')">САТУ РЕЖИМІ</button>
-            <button class="btn outline" id="releaseModeBtn" onclick="setMode('release')">БОСАТУ РЕЖИМІ</button>
-          </div>
-          <div class="actions">
-            <button class="btn" id="mainActionBtn" onclick="runMainAction()">ТӨЛЕМ РАСТАЛДЫ — САТЫЛДЫ</button>
-            <button class="btn outline" onclick="clearSelected()">ТАЗАЛАУ</button>
-            <button class="btn danger" onclick="signOut()">ШЫҒУ</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card no-print">
-      <h3>Зал</h3>
-      <div class="muted" id="modeHelp">Сату режимі: бос орындарды таңдаңыз. Алтын — таңдалған, сұр — сатылған.</div>
-      <div id="tables" class="tables"></div>
-    </div>
-
-    <div id="ticket" class="ticket">
-      <div class="brand" style="color:#20180e">QUT</div>
-      <div id="tEvent"></div><div id="tVenue"></div>
-      <hr>
-      <div class="row">
-        <div><small>КЛИЕНТ</small><div class="big" id="tName">—</div></div>
-        <div><small>БИЛЕТ №</small><div id="tId">—</div></div>
-      </div>
-      <div class="row">
-        <div><small>ОРЫНДАР</small><div class="big" id="tSeats">—</div></div>
-        <div><small>СОМА</small><div class="big" id="tAmount">—</div></div>
-      </div>
-      <div id="tPhone"></div>
-      <div id="qr"></div>
-      <div style="text-align:center;margin-top:10px">Кіру кезінде осы QR-билетті көрсетіңіз</div>
-    </div>
-
-    <div id="ticketActions" class="actions no-print hidden">
-      <button class="btn outline" onclick="window.print()">PDF / БАСЫП ШЫҒАРУ</button>
-    </div>
-  </div>
+<div id="login" class="card">
+<h3>Админге кіру</h3>
+<label>Email</label><input id="email" type="email">
+<label>Құпиясөз</label><input id="password" type="password">
+<div class="actions"><button class="btn" id="loginBtn">КІРУ</button></div>
+<div id="loginMsg" class="muted"></div>
 </div>
 
-<script src="events.js?v=20261001-003"></script>
+<div id="area" class="hidden">
+<div class="card">
+<label>Кеш</label><select id="eventSelect"></select><p id="eventInfo" class="muted"></p>
+</div>
+
+<div class="card">
+<h3>Төлем растауын күтіп тұрған броньдар</h3>
+<div id="pending" class="pending"></div>
+<div class="actions"><button class="btn outline" id="refreshBtn">ЖАҢАРТУ</button></div>
+</div>
+
+<div class="card">
+<h3>Қолмен сату / бұрын төленген билетті енгізу</h3>
+<label>Клиент аты</label><input id="clientName" placeholder="Айдана">
+<label>Телефон</label><input id="clientPhone" placeholder="+7 700 000 00 00">
+<p id="manualSelection" class="muted">Орын таңдалмады</p>
+<div id="tables" class="tables"></div>
+<div class="actions"><button class="btn" id="manualSellBtn">ТӨЛЕМ РАСТАЛДЫ — САТЫЛДЫ</button><button class="btn outline" id="clearBtn">ТАЗАЛАУ</button></div>
+</div>
+
+<div id="ticketCard" class="card hidden">
+<h3>Билет дайын</h3>
+<div class="ticket">
+<div class="brand" style="color:#20180e">QUT</div>
+<div id="tEvent"></div><div id="tVenue"></div>
+<div class="row"><div><small>КЛИЕНТ</small><div class="big" id="tName"></div></div><div><small>БИЛЕТ №</small><div id="tId"></div></div></div>
+<div class="row"><div><small>ОРЫНДАР</small><div class="big" id="tSeats"></div></div><div><small>СОМА</small><div class="big" id="tAmount"></div></div></div>
+<div id="qr"></div>
+</div>
+<div class="actions"><a id="ticketLink" class="btn" target="_blank">БИЛЕТТІ АШУ</a><a id="waLink" class="btn outline" target="_blank">WHATSAPP-ПЕН ЖІБЕРУ</a></div>
+</div>
+
+<div class="card"><button class="btn danger" id="logoutBtn">ШЫҒУ</button></div>
+</div>
+</div>
+<script src="events.js?v=20261001-004"></script>
 <script>
-const SUPABASE_URL='https://bsdbkzopylzghywassii.supabase.co';
-const SUPABASE_ANON_KEY='sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg';
-const events=[...window.QUT_EVENTS,{"code":"QUT-ACOUSTIC-001","name":"Бұрынғы акустикалық кеш (архив)","date":"","time":"","venue":"«Құт» мейрамханасы","price":10000}];
-let activeEvent=events[0];
-let EVENT_CODE=activeEvent.code;
-let seatRequest=0;
-let seatsReady=false;
-let actionBusy=false;
-async function changeEvent(code){
-  if(actionBusy){document.getElementById('eventSelect').value=EVENT_CODE;return;}
-  const next=events.find(e=>e.code===code);
-  if(!next) return;
-  activeEvent=next; EVENT_CODE=next.code; seatsReady=false;
-  selected.clear(); sold.clear();
-  document.getElementById('ticket').style.display='none';
-  document.getElementById('ticketActions').classList.add('hidden');
-  document.getElementById('adminEventInfo').textContent=next.name+' • '+next.date+' '+next.time+' • '+next.venue;
-  setMode('sell'); await refreshSeats();
+const URL='https://bsdbkzopylzghywassii.supabase.co',KEY='sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg';
+const sb=window.supabase.createClient(URL,KEY),events=window.QUT_EVENTS;
+const caps={1:6,2:6,3:6,4:4,5:4,6:6,7:4,8:6,9:4,10:4,11:4,12:4,13:6,14:6,15:6,16:6,17:6,18:6,19:6,20:6,21:6,22:6,23:6};
+let active=events[0],statuses=new Map(),selected=new Set();
+const money=n=>new Intl.NumberFormat('kk-KZ').format(n)+' ₸',code=(t,s)=>t+'-'+s;
+function human(c){const [t,s]=c.split('-');return t+'-үстел, '+s+'-орын'}
+function seatsJson(){return [...selected].map(c=>{const [t,s]=c.split('-').map(Number);return {table_no:t,seat_no:s}})}
+async function signIn(){const {error}=await sb.auth.signInWithPassword({email:email.value.trim(),password:password.value});loginMsg.textContent=error?error.message:'Кіру сәтті';if(!error)init()}
+async function init(){const {data:{session}}=await sb.auth.getSession();if(!session)return;login.classList.add('hidden');area.classList.remove('hidden');await changeEvent(active.code)}
+async function changeEvent(c){active=events.find(e=>e.code===c)||events[0];eventInfo.textContent=active.name+' • '+active.date+' • '+active.time;selected.clear();await Promise.all([loadSeats(),loadPending()])}
+async function loadSeats(){
+ const {data,error}=await sb.rpc('get_seat_statuses',{p_event_code:active.code});if(error){alert(error.message);return}
+ statuses.clear();(data||[]).forEach(r=>statuses.set(code(r.table_no,r.seat_no),r.status));renderTables()
 }
-
-const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-
-const selected=new Set();
-const sold=new Set();
-let mode='sell';
-
-function code(t,s){return `${t}-${s}`}
-function money(v){return new Intl.NumberFormat('kk-KZ').format(v)+' ₸'}
-
-async function signIn(){
-  const email=document.getElementById('email').value.trim();
-  const password=document.getElementById('password').value;
-  const {error}=await sb.auth.signInWithPassword({email,password});
-  document.getElementById('loginMsg').textContent=error ? error.message : 'Кіру сәтті';
-  if(!error) initAdmin();
+function renderTables(){tables.innerHTML='';for(let t=1;t<=23;t++){const box=document.createElement('div');box.className='table';box.innerHTML='<b>'+t+'-үстел · '+caps[t]+' орын</b>';const sr=document.createElement('div');sr.className='seats';for(let s=1;s<=caps[t];s++){const c=code(t,s),st=statuses.get(c)||'available',b=document.createElement('button');b.className='seat';b.textContent=s;b.type='button';if(st==='sold'){b.classList.add('sold');b.disabled=true}else if(st==='held'){b.classList.add('held');b.disabled=true}else{if(selected.has(c))b.classList.add('selected');b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateManual()}}sr.appendChild(b)}box.appendChild(sr);tables.appendChild(box)}updateManual()}
+function updateManual(){manualSelection.textContent=selected.size?[...selected].sort().map(human).join(' • '):'Орын таңдалмады'}
+async function loadPending(){
+ const {data,error}=await sb.from('booking_requests').select('*').eq('event_code',active.code).eq('status','pending').order('created_at',{ascending:true});
+ if(error){pending.innerHTML='<div class="muted">'+error.message+'</div>';return}
+ pending.innerHTML='';
+ if(!data?.length){pending.innerHTML='<div class="muted">Растауды күтіп тұрған бронь жоқ.</div>';return}
+ data.forEach(r=>{const d=document.createElement('div');d.className='req';const seats=(r.seats||[]).map(x=>x.table_no+'-үстел '+x.seat_no+'-орын').join(', ');d.innerHTML='<b>'+r.customer_name+'</b><br>'+r.customer_phone+'<br>'+seats+'<br><b>'+money(r.amount)+'</b><br><small>'+new Date(r.created_at).toLocaleString('kk-KZ')+'</small><div class="actions"><button class="btn">ТӨЛЕМ ТҮСТІ — РАСТАУ</button><button class="btn danger">БОЛДЫРМАУ</button></div>';const [ok,no]=d.querySelectorAll('button');ok.onclick=()=>confirmRequest(r);no.onclick=()=>cancelRequest(r);pending.appendChild(d)})
 }
-async function signOut(){await sb.auth.signOut(); location.reload();}
-
-async function initAdmin(){
-  const {data:{session}}=await sb.auth.getSession();
-  if(!session) return;
-  document.getElementById('loginCard').classList.add('hidden');
-  document.getElementById('adminArea').classList.remove('hidden');
-  setMode('sell');
-  await changeEvent(EVENT_CODE);
+async function confirmRequest(r){
+ if(!confirm(r.customer_name+' төлемі Kaspi-де түскенін тексердіңіз бе?'))return;
+ const {data,error}=await sb.rpc('confirm_booking_request',{p_request_id:r.id,p_event_name:active.name,p_event_date:active.date,p_event_time:active.time,p_venue:active.venue});
+ if(error){alert(error.message);return}
+ showTicket(data,r.customer_name,r.customer_phone,r.seats,r.amount);await Promise.all([loadSeats(),loadPending()])
 }
-
-async function refreshSeats(){
-  const request=++seatRequest;
-  const eventCode=EVENT_CODE;
-  seatsReady=false; renderTables();
-  document.getElementById('mainActionBtn').disabled=true;
-  const {data,error}=await sb.from('seats').select('table_no,seat_no,status').eq('event_code',eventCode);
-  if(request!==seatRequest || eventCode!==EVENT_CODE)return;
-  if(error){alert('Базаны оқу қатесі: '+error.message);return}
-  seatsReady=true;
-  document.getElementById('mainActionBtn').disabled=actionBusy;
-  sold.clear();
-  (data||[]).forEach(r=>{if(r.status==='sold') sold.add(code(r.table_no,r.seat_no))});
-  [...selected].forEach(c=>{if(sold.has(c)) selected.delete(c)});
-  renderTables();
-  updateSelectionText();
+async function cancelRequest(r){if(!confirm('Броньды босатамыз ба?'))return;const {error}=await sb.rpc('release_hold',{p_hold_token:r.hold_token});if(error)alert(error.message);await Promise.all([loadSeats(),loadPending()])}
+async function manualSell(){
+ if(!selected.size){alert('Орын таңдаңыз');return}
+ const name=clientName.value.trim()||'Қонақ',phone=clientPhone.value.trim(),arr=seatsJson(),amount=arr.length*active.price;
+ const {data,error}=await sb.rpc('admin_sell_seats',{p_event_code:active.code,p_seats:arr,p_customer_name:name,p_customer_phone:phone,p_amount:amount,p_event_name:active.name,p_event_date:active.date,p_event_time:active.time,p_venue:active.venue});
+ if(error){alert(error.message);return}
+ showTicket(data,name,phone,arr,amount);selected.clear();await loadSeats()
 }
-
-function renderTables(){
-  const root=document.getElementById('tables'); root.innerHTML='';
-  for(let t=1;t<=16;t++){
-    const box=document.createElement('div'); box.className='table';
-    const title=document.createElement('strong'); title.textContent='Үстел '+t; box.appendChild(title);
-    const sroot=document.createElement('div'); sroot.className='seats';
-    for(let s=1;s<=6;s++){
-      const b=document.createElement('button'); b.className='seat'; b.textContent=s; b.type='button';
-      const c=code(t,s);
-      if(sold.has(c)){
-        b.classList.add('sold');
-        if(mode==='release'){
-          b.disabled=false;
-          if(selected.has(c)) b.classList.add('selected');
-          b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateSelectionText();}
-        }else{
-          b.disabled=true;
-        }
-      } else {
-        if(mode==='sell'){
-          if(selected.has(c)) b.classList.add('selected');
-          b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateSelectionText();}
-        }else{
-          b.disabled=true;
-        }
-      }
-      if(!seatsReady || actionBusy)b.disabled=true;
-      sroot.appendChild(b);
-    }
-    box.appendChild(sroot); root.appendChild(box);
-  }
+function showTicket(id,name,phone,seats,amount){
+ const list=(seats||[]).map(x=>x.table_no+'-үстел, '+x.seat_no+'-орын').join(' • ');
+ tEvent.textContent=active.name+' • '+active.date+' '+active.time;tVenue.textContent=active.venue;tName.textContent=name;tId.textContent=id;tSeats.textContent=list;tAmount.textContent=money(amount);
+ qr.innerHTML='';new QRCode(qr,{text:location.origin+'/ticket.html?id='+id,width:180,height:180});
+ const link=location.origin+'/ticket.html?id='+id;ticketLink.href=link;
+ const msg='Сәлеметсіз бе, '+name+'! QUT билеті дайын. '+active.name+'. Орындар: '+list+'. Билет: '+link;
+ waLink.href='https://wa.me/'+String(phone||'').replace(/\D/g,'')+'?text='+encodeURIComponent(msg);
+ ticketCard.classList.remove('hidden');ticketCard.scrollIntoView({behavior:'smooth'})
 }
-
-function setMode(nextMode){
-  mode=nextMode;
-  selected.clear();
-
-  const sellBtn=document.getElementById('sellModeBtn');
-  const releaseBtn=document.getElementById('releaseModeBtn');
-  const actionBtn=document.getElementById('mainActionBtn');
-  const help=document.getElementById('modeHelp');
-
-  if(mode==='sell'){
-    sellBtn.className='btn';
-    releaseBtn.className='btn outline';
-    actionBtn.className='btn';
-    actionBtn.textContent='ТӨЛЕМ РАСТАЛДЫ — САТЫЛДЫ';
-    help.textContent='Сату режимі: бос орындарды таңдаңыз. Алтын — таңдалған, сұр — сатылған.';
-  }else{
-    sellBtn.className='btn outline';
-    releaseBtn.className='btn danger';
-    actionBtn.className='btn danger';
-    actionBtn.textContent='ТАҢДАЛҒАН ОРЫНДАРДЫ БОСАТУ';
-    help.textContent='Босату режимі: тек сұр (сатылған) орындарды таңдаңыз да, босатыңыз.';
-  }
-
-  renderTables();
-  updateSelectionText();
-}
-
-async function runMainAction(){
-  if(actionBusy || !seatsReady)return;
-  actionBusy=true;
-  document.getElementById('eventSelect').disabled=true;
-  document.getElementById('mainActionBtn').disabled=true;
-  renderTables();
-  try{
-    if(mode==='sell') await confirmSold();
-    else await releaseSeats();
-  }catch(error){alert('Операция аяқталмады: '+error.message);}
-  finally{
-    actionBusy=false;
-    document.getElementById('eventSelect').disabled=false;
-    document.getElementById('mainActionBtn').disabled=!seatsReady;
-    renderTables();
-  }
-}
-
-async function releaseSeats(){
-  const seats=sorted();
-  if(!seats.length){alert('Босататын сатылған орындарды таңдаңыз');return}
-
-  const ok=confirm(`Таңдалған ${seats.length} орынды қайта босатамыз ба?`);
-  if(!ok) return;
-
-  for(const c of seats){
-    const [t,s]=c.split('-').map(Number);
-    const {error}=await sb
-      .from('seats')
-      .update({
-        status:'available',
-        ticket_id:null,
-        customer_name:null,
-        customer_phone:null,
-        sold_at:null
-      })
-      .eq('event_code',EVENT_CODE)
-      .eq('table_no',t)
-      .eq('seat_no',s);
-
-    if(error){
-      alert('Орынды босату қатесі: '+error.message);
-      return;
-    }
-  }
-
-  selected.clear();
-  await refreshSeats();
-  alert('Орындар қайта босатылды.');
-}
-
-function sorted(){return [...selected].sort((a,b)=>{const [ta,sa]=a.split('-').map(Number),[tb,sb]=b.split('-').map(Number);return ta===tb?sa-sb:ta-tb})}
-function human(c){const [t,s]=c.split('-');return `Үстел ${t}, орын ${s}`}
-function updateSelectionText(){const arr=sorted();document.getElementById('selectionText').textContent=arr.length?arr.map(human).join(' • '):'Орын таңдалмады'}
-function clearSelected(){selected.clear();renderTables();updateSelectionText()}
-
-function ticketId(){
-  const d=new Date();
-  const stamp=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}${String(d.getHours()).padStart(2,'0')}${String(d.getMinutes()).padStart(2,'0')}`;
-  return `QUT-${stamp}-${Math.floor(1000+Math.random()*9000)}`;
-}
-
-async function confirmSold(){
-  const seats=sorted();
-  if(!seats.length){alert('Алдымен орын таңдаңыз');return}
-  const name=document.getElementById('clientName').value.trim()||'Қонақ';
-  const phone=document.getElementById('clientPhone').value.trim()||'—';
-  const id=ticketId();
-
-  const rows=seats.map(c=>{
-    const [t,s]=c.split('-').map(Number);
-    return {event_code:EVENT_CODE,table_no:t,seat_no:s,status:'sold',ticket_id:id,customer_name:name,customer_phone:phone,sold_at:new Date().toISOString()};
-  });
-
-  const {error}=await sb.from('seats').upsert(rows,{onConflict:'event_code,table_no,seat_no'});
-  if(error){alert('Сақтау қатесі: '+error.message);return}
-
-  const amount=seats.length*activeEvent.price;
-  document.getElementById('tEvent').textContent=activeEvent.name+' • '+activeEvent.date+' '+activeEvent.time;
-  document.getElementById('tVenue').textContent=activeEvent.venue;
-  document.getElementById('tName').textContent=name;
-  document.getElementById('tId').textContent=id;
-  document.getElementById('tSeats').textContent=seats.map(human).join(' • ');
-  document.getElementById('tAmount').textContent=money(amount);
-  document.getElementById('tPhone').textContent='Телефон: '+phone;
-
-  const qr=document.getElementById('qr'); qr.innerHTML='';
-  new QRCode(qr,{text:`QUT TICKET | ${EVENT_CODE} | ${activeEvent.name} | ${activeEvent.date} ${activeEvent.time} | ${id} | ${name} | ${seats.map(human).join('; ')} | ${amount} KZT`,width:180,height:180});
-
-  document.getElementById('ticket').style.display='block';
-  document.getElementById('ticketActions').classList.remove('hidden');
-
-  selected.clear();
-  mode='sell';
-  setMode('sell');
-  await refreshSeats();
-  alert('Орындар сатылды деп белгіленді. Билет дайын.');
-}
-
-document.getElementById('eventSelect').innerHTML=events.map(e=>`<option value="${e.code}">${e.name}${e.date ? ' — '+e.date+', '+e.time : ''}</option>`).join('');
-initAdmin();
+eventSelect.innerHTML=events.map(e=>'<option value="'+e.code+'">'+e.name+' — '+e.date+', '+e.time+'</option>').join('');
+eventSelect.onchange=e=>changeEvent(e.target.value);loginBtn.onclick=signIn;refreshBtn.onclick=()=>Promise.all([loadSeats(),loadPending()]);manualSellBtn.onclick=manualSell;clearBtn.onclick=()=>{selected.clear();renderTables()};logoutBtn.onclick=async()=>{await sb.auth.signOut();location.reload()};
+init();
 </script>
-</body>
-</html>
+</body></html>
