@@ -129,10 +129,12 @@ async function init(){
 }
 async function changeEvent(c){active=events.find(e=>e.code===c)||events[0];els.eventInfo.textContent=active.name+' • '+active.date+' • '+active.time;selected.clear();await Promise.all([loadSeats(),loadPending()])}
 async function loadSeats(){
- const {data,error}=await sb.rpc('get_seat_statuses',{p_event_code:active.code});if(error){alert(error.message);return}
- statuses.clear();(data||[]).forEach(r=>statuses.set(code(r.table_no,r.seat_no),r.status));renderTables()
+ await sb.rpc('get_seat_statuses',{p_event_code:active.code});
+ const {data,error}=await sb.from('seats').select('table_no,seat_no,status,ticket_id').eq('event_code',active.code);
+ if(error){alert(error.message);return}
+ statuses.clear();(data||[]).forEach(r=>statuses.set(code(r.table_no,r.seat_no),r));renderTables()
 }
-function renderTables(){els.tables.innerHTML='';for(let t=1;t<=23;t++){const box=document.createElement('div');box.className='table';box.innerHTML='<b>'+t+'-үстел · '+caps[t]+' орын</b>';const sr=document.createElement('div');sr.className='seats';for(let s=1;s<=caps[t];s++){const c=code(t,s),st=statuses.get(c)||'available',b=document.createElement('button');b.className='seat';b.textContent=s;b.type='button';if(st==='sold'){b.classList.add('sold');b.disabled=true}else if(st==='held'){b.classList.add('held');b.disabled=true}else{if(selected.has(c))b.classList.add('selected');b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateManual()}}sr.appendChild(b)}box.appendChild(sr);els.tables.appendChild(box)}updateManual()}
+function renderTables(){els.tables.innerHTML='';for(let t=1;t<=23;t++){const box=document.createElement('div');box.className='table';box.innerHTML='<b>'+t+'-үстел · '+caps[t]+' орын</b>';const sr=document.createElement('div');sr.className='seats';for(let s=1;s<=caps[t];s++){const c=code(t,s),row=statuses.get(c)||{status:'available',ticket_id:null},st=row.status,b=document.createElement('button');b.className='seat';b.textContent=s;b.type='button';if(st==='sold'){b.classList.add('sold');if(row.ticket_id){b.disabled=true;b.title='Сатылған, билет берілген'}else{b.title='Сатылған, билет әлі берілмеген';if(selected.has(c))b.classList.add('selected');b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateManual()}}}else if(st==='held'){b.classList.add('held');b.disabled=true}else{if(selected.has(c))b.classList.add('selected');b.onclick=()=>{selected.has(c)?selected.delete(c):selected.add(c);renderTables();updateManual()}}sr.appendChild(b)}box.appendChild(sr);els.tables.appendChild(box)}updateManual()}
 function updateManual(){els.manualSelection.textContent=selected.size?[...selected].sort().map(human).join(' • '):'Орын таңдалмады'}
 async function loadPending(){
  const {data,error}=await sb.from('booking_requests').select('*').eq('event_code',active.code).eq('status','pending').order('created_at',{ascending:true});
@@ -151,7 +153,10 @@ async function cancelRequest(r){if(!confirm('Броньды босатамыз �
 async function manualSell(){
  if(!selected.size){alert('Орын таңдаңыз');return}
  const name=els.clientName.value.trim()||'Қонақ',phone=els.clientPhone.value.trim(),arr=seatsJson(),amount=arr.length*active.price;
- const {data,error}=await sb.rpc('admin_sell_seats',{p_event_code:active.code,p_seats:arr,p_customer_name:name,p_customer_phone:phone,p_amount:amount,p_event_name:active.name,p_event_date:active.date,p_event_time:active.time,p_venue:active.venue});
+ const rows=[...selected].map(c=>statuses.get(c)||{status:'available',ticket_id:null});
+ const existingSold=rows.every(r=>r.status==='sold' && !r.ticket_id);
+ const rpc=existingSold?'attach_ticket_to_sold_seats':'admin_sell_seats';
+ const {data,error}=await sb.rpc(rpc,{p_event_code:active.code,p_seats:arr,p_customer_name:name,p_customer_phone:phone,p_amount:amount,p_event_name:active.name,p_event_date:active.date,p_event_time:active.time,p_venue:active.venue});
  if(error){alert(error.message);return}
  showTicket(data,name,phone,arr,amount);selected.clear();await loadSeats()
 }
