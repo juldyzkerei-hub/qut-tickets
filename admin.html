@@ -16,7 +16,8 @@ label{display:block;font-size:12px;color:#e8d1a8;margin:12px 0 6px}input,select{
 .pending{display:grid;gap:10px}.req{border:1px solid #6e5838;border-radius:10px;padding:13px;background:#15120f}.req b{color:#f2d294}.req small{color:#bfb3a2}
 .tables{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.table{border:1px solid #665033;border-radius:12px;padding:12px;background:#15120f}.seats{display:flex;gap:7px;flex-wrap:wrap}.seat{width:38px;height:38px;border-radius:50%;border:1px solid #9f8051;background:#352a1b;color:#fff;font-weight:800}.seat.selected{background:var(--gold);color:#20180e}.seat.sold{background:#4c4740;color:#8f887d}.seat.held{background:#8d652d}
 .ticket{background:#f8f2e8;color:#20180e;border-radius:18px;padding:24px;margin-top:18px}.ticket .row{display:flex;justify-content:space-between;gap:16px;margin:16px 0}.big{font-size:22px;font-weight:800}#qr{display:flex;justify-content:center;margin-top:16px}
-@media(max-width:760px){.tables{grid-template-columns:repeat(2,1fr)}}@media(max-width:430px){.tables{grid-template-columns:1fr}}
+.salesSummary{display:grid;gap:12px}.summaryRow{border:1px solid #6e5838;border-radius:12px;padding:14px;background:#15120f}.summaryTitle{font-weight:800;color:#f2d294;margin-bottom:10px}.summaryNums{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stat{background:#211c16;border-radius:9px;padding:10px}.stat small{display:block;color:#bfb3a2;margin-bottom:4px}.stat b{font-size:18px}
+@media(max-width:760px){.tables{grid-template-columns:repeat(2,1fr)}.summaryNums{grid-template-columns:repeat(2,1fr)}}@media(max-width:430px){.tables{grid-template-columns:1fr}.summaryNums{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body><div class="wrap">
@@ -34,6 +35,12 @@ label{display:block;font-size:12px;color:#e8d1a8;margin:12px 0 6px}input,select{
 <div id="area" class="hidden">
 <div class="card">
 <label>Кеш</label><select id="eventSelect"></select><p id="eventInfo" class="muted"></p>
+</div>
+
+<div class="card">
+<h3>Сатылым статистикасы</h3>
+<p class="muted">Барлық кеш бойынша билет саны автоматты есептеледі.</p>
+<div id="salesSummary" class="salesSummary"></div>
 </div>
 
 <div class="card">
@@ -83,6 +90,7 @@ const els={
   loginMsg:document.getElementById('loginMsg'),
   eventSelect:document.getElementById('eventSelect'),
   eventInfo:document.getElementById('eventInfo'),
+  salesSummary:document.getElementById('salesSummary'),
   pending:document.getElementById('pending'),
   tables:document.getElementById('tables'),
   manualSelection:document.getElementById('manualSelection'),
@@ -127,7 +135,20 @@ async function init(){
   els.area.classList.remove('hidden');
   await changeEvent(active.code);
 }
-async function changeEvent(c){active=events.find(e=>e.code===c)||events[0];els.eventInfo.textContent=active.name+' • '+active.date+' • '+active.time;selected.clear();await Promise.all([loadSeats(),loadPending()])}
+async function changeEvent(c){active=events.find(e=>e.code===c)||events[0];els.eventInfo.textContent=active.name+' • '+active.date+' • '+active.time;selected.clear();await Promise.all([loadSeats(),loadPending(),loadSalesSummary()])}
+async function loadSalesSummary(){
+ const {data,error}=await sb.from('seats').select('event_code,status');
+ if(error){els.salesSummary.innerHTML='<div class="muted">Статистиканы жүктеу қатесі: '+error.message+'</div>';return}
+ const total=Object.values(caps).reduce((a,b)=>a+b,0);
+ els.salesSummary.innerHTML=events.map(e=>{
+   const rows=(data||[]).filter(r=>r.event_code===e.code);
+   const sold=rows.filter(r=>r.status==='sold').length;
+   const held=rows.filter(r=>r.status==='held').length;
+   const free=Math.max(0,total-sold-held);
+   const revenue=sold*e.price;
+   return '<div class="summaryRow"><div class="summaryTitle">'+e.name+' · '+e.date+'</div><div class="summaryNums"><div class="stat"><small>САТЫЛДЫ</small><b>'+sold+' билет</b></div><div class="stat"><small>БОС ОРЫН</small><b>'+free+'</b></div><div class="stat"><small>БРОНЬ</small><b>'+held+'</b></div><div class="stat"><small>ТҮСІМ</small><b>'+money(revenue)+'</b></div></div></div>';
+ }).join('');
+}
 async function loadSeats(){
  await sb.rpc('get_seat_statuses',{p_event_code:active.code});
  const {data,error}=await sb.from('seats').select('table_no,seat_no,status,ticket_id').eq('event_code',active.code);
@@ -147,9 +168,9 @@ async function confirmRequest(r){
  if(!confirm(r.customer_name+' төлемі Kaspi-де түскенін тексердіңіз бе?'))return;
  const {data,error}=await sb.rpc('confirm_booking_request',{p_request_id:r.id,p_event_name:active.name,p_event_date:active.date,p_event_time:active.time,p_venue:active.venue});
  if(error){alert(error.message);return}
- showTicket(data,r.customer_name,r.customer_phone,r.seats,r.amount);await Promise.all([loadSeats(),loadPending()])
+ showTicket(data,r.customer_name,r.customer_phone,r.seats,r.amount);await Promise.all([loadSeats(),loadPending(),loadSalesSummary()])
 }
-async function cancelRequest(r){if(!confirm('Броньды босатамыз ба?'))return;const {error}=await sb.rpc('release_hold',{p_hold_token:r.hold_token});if(error)alert(error.message);await Promise.all([loadSeats(),loadPending()])}
+async function cancelRequest(r){if(!confirm('Броньды босатамыз ба?'))return;const {error}=await sb.rpc('release_hold',{p_hold_token:r.hold_token});if(error)alert(error.message);await Promise.all([loadSeats(),loadPending(),loadSalesSummary()])}
 async function manualSell(){
  if(!selected.size){alert('Орын таңдаңыз');return}
  const name=els.clientName.value.trim()||'Қонақ',phone=els.clientPhone.value.trim(),arr=seatsJson(),amount=arr.length*active.price;
@@ -158,7 +179,7 @@ async function manualSell(){
  const rpc=existingSold?'attach_ticket_to_sold_seats':'admin_sell_seats';
  const {data,error}=await sb.rpc(rpc,{p_event_code:active.code,p_seats:arr,p_customer_name:name,p_customer_phone:phone,p_amount:amount,p_event_name:active.name,p_event_date:active.date,p_event_time:active.time,p_venue:active.venue});
  if(error){alert(error.message);return}
- showTicket(data,name,phone,arr,amount);selected.clear();await loadSeats()
+ showTicket(data,name,phone,arr,amount);selected.clear();await Promise.all([loadSeats(),loadSalesSummary()])
 }
 function showTicket(id,name,phone,seats,amount){
  const list=(seats||[]).map(x=>x.table_no+'-үстел, '+x.seat_no+'-орын').join(' • ');
@@ -171,7 +192,7 @@ function showTicket(id,name,phone,seats,amount){
 }
 els.eventSelect.innerHTML=events.map(e=>'<option value="'+e.code+'">'+e.name+' — '+e.date+', '+e.time+'</option>').join('');
 els.eventSelect.onchange=e=>changeEvent(e.target.value);
-els.refreshBtn.onclick=()=>Promise.all([loadSeats(),loadPending()]);
+els.refreshBtn.onclick=()=>Promise.all([loadSeats(),loadPending(),loadSalesSummary()]);
 els.manualSellBtn.onclick=manualSell;
 els.clearBtn.onclick=()=>{selected.clear();renderTables()};
 els.logoutBtn.onclick=async()=>{await sb.auth.signOut();location.reload()};
