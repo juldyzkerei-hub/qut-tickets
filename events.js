@@ -16,7 +16,7 @@ window.QUT_EVENTS = [
     "type": "Бенефис шоу-концерт",
     "date": "7 қазан 2026",
     "time": "19:30",
-    "poster": "afisha-askhat-v2.jpg",
+    "poster": "afisha-askhat-20261002.png",
     "venue": "«Құт» мейрамханасы, Тургут Озала 178, 4-қабат",
     "price": 10000
   },
