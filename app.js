@@ -1,7 +1,7 @@
 const SUPABASE_URL='https://bsdbkzopylzghywassii.supabase.co';
 const SUPABASE_KEY='sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-const events=window.QUT_EVENTS;
+const events=window.QUT_EVENTS.filter(e=>!e.archived);
 const caps={1:6,2:6,3:6,4:4,5:4,6:6,7:4,8:6,9:4,10:4,11:4,12:4,13:6,14:6,15:6,16:6,17:6,18:6,19:6,20:6,21:6,22:6,23:6};
 const pos=[[1,11,20],[2,61,26],[3,11,31],[4,21,31],[5,32,33],[6,11,42],[7,21,42],[8,11,53],[9,21,53],[10,32,48],[11,43,53],[12,51,53],[13,62,52],[14,13,67],[15,25,67],[16,38,67],[17,51,67],[18,64,67],[19,13,82],[20,25,82],[21,38,82],[22,51,82],[23,64,82]];
 let active=events[0],selected=new Set(),statuses=new Map(),hold=null,timer=null;

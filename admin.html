@@ -73,7 +73,7 @@ label{display:block;font-size:12px;color:#e8d1a8;margin:12px 0 6px}input,select{
 <div class="card"><button class="btn danger" id="logoutBtn">ШЫҒУ</button></div>
 </div>
 </div>
-<script src="events.js?v=20261002-01"></script>
+<script src="events.js?v=20261002-02"></script>
 <script>
 const SUPABASE_URL='https://bsdbkzopylzghywassii.supabase.co';
 const SUPABASE_KEY='sb_publishable_Sktu6sRdYMzw0GepkcyJWg_PRwAqcfg';
@@ -146,7 +146,7 @@ async function loadSalesSummary(){
    const held=rows.filter(r=>r.status==='held').length;
    const free=Math.max(0,total-sold-held);
    const revenue=sold*e.price;
-   return '<div class="summaryRow"><div class="summaryTitle">'+e.name+' · '+e.date+'</div><div class="summaryNums"><div class="stat"><small>САТЫЛДЫ</small><b>'+sold+' билет</b></div><div class="stat"><small>БОС ОРЫН</small><b>'+free+'</b></div><div class="stat"><small>БРОНЬ</small><b>'+held+'</b></div><div class="stat"><small>ТҮСІМ</small><b>'+money(revenue)+'</b></div></div></div>';
+   return '<div class="summaryRow"><div class="summaryTitle">'+e.name+(e.archived?' · Архив':'')+' · '+e.date+'</div><div class="summaryNums"><div class="stat"><small>САТЫЛДЫ</small><b>'+sold+' билет</b></div><div class="stat"><small>БОС ОРЫН</small><b>'+free+'</b></div><div class="stat"><small>БРОНЬ</small><b>'+held+'</b></div><div class="stat"><small>ТҮСІМ</small><b>'+money(revenue)+'</b></div></div></div>';
  }).join('');
 }
 async function loadSeats(){
@@ -190,7 +190,7 @@ function showTicket(id,name,phone,seats,amount){
  els.waLink.href='https://wa.me/'+String(phone||'').replace(/\D/g,'')+'?text='+encodeURIComponent(msg);
  els.ticketCard.classList.remove('hidden');els.ticketCard.scrollIntoView({behavior:'smooth'})
 }
-els.eventSelect.innerHTML=events.map(e=>'<option value="'+e.code+'">'+e.name+' — '+e.date+', '+e.time+'</option>').join('');
+els.eventSelect.innerHTML=events.map(e=>'<option value="'+e.code+'">'+(e.archived?'[Архив] ':'')+e.name+' — '+e.date+', '+e.time+'</option>').join('');
 els.eventSelect.onchange=e=>changeEvent(e.target.value);
 els.refreshBtn.onclick=()=>Promise.all([loadSeats(),loadPending(),loadSalesSummary()]);
 els.manualSellBtn.onclick=manualSell;

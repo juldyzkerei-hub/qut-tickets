@@ -1,6 +1,7 @@
 window.QUT_EVENTS = [
   {
     "code": "QUT-LIVE-20261001",
+    "archived": true,
     "name": "SETRUS · QARA BALA · AILEND · MERLIN MONRO",
     "type": "Жанды дауыстағы концерт",
     "date": "1 қазан 2026",
