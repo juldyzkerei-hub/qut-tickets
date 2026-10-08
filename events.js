@@ -13,6 +13,7 @@ window.QUT_EVENTS = [
   },
   {
     "code": "QUT-ASKHAT-20261007",
+    "archived": true,
     "name": "Асхат Қылышбек",
     "type": "Бенефис шоу-концерт",
     "date": "7 қазан 2026",
