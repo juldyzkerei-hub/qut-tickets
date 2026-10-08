@@ -41,7 +41,7 @@ window.QUT_EVENTS = [
     "poster": "afisha-qyzdarai.png",
     "venue": "«Құт» мейрамханасы, Тургут Озала 178",
     "price": 10000
-  }
+  },
   {
     "code": "QUT-ERGALI-20261027",
     "name": "Ерғали Көшербаев",
