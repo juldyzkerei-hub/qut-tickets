@@ -85,7 +85,7 @@ async function paid(){
  if(error){msg.className='status error';msg.textContent=error.message;return}
  msg.className='status success';msg.textContent='Төлем растауға жіберілді. Тексерілген соң билет сілтемесі WhatsApp-қа жіберіледі.';
  const text='Сәлеметсіз бе! Төлем жасадым. '+active.name+' — '+sorted().map(human).join(', ')+'. Сома: '+money(amount)+'. Аты: '+name+'. Телефон: '+phone+'. Бронь №: '+data;
- window.open('https://wa.me/77003441472?text='+encodeURIComponent(text),'_blank');
+ window.open('https://wa.me/77076297676?text='+encodeURIComponent(text),'_blank');
 }
 function chooseEvent(c){
  const e=events.find(x=>x.code===c);if(!e)return;
