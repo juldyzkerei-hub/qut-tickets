@@ -28,7 +28,7 @@ window.QUT_EVENTS = [
     "type": "Бенефис шоу-концерт",
     "date": "14 қазан 2026",
     "time": "19:30",
-    "poster": "https://raw.githubusercontent.com/juldyzkerei-hub/qut-tickets/main/zharylkasyn.png%20.png",
+    "poster": "afisha-zharylkasyn-20261012.jpg",
     "venue": "«Құт» мейрамханасы, Тургут Озала 178",
     "price": 10000,
     "description": "Өнер • тағдыр • өмір жолы"
