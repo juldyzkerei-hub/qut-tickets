@@ -40,7 +40,7 @@ window.QUT_EVENTS = [
     "type": "Бенефис шоу",
     "date": "30 қазан 2026",
     "time": "19:00",
-    "poster": "afisha-qyzdarai-20261017.jpg",
+    "poster": "afisha-qyzdarai.png?v=20261017",
     "venue": "«Құт» мейрамханасы, Тургут Озала 178",
     "price": 10000
   },
