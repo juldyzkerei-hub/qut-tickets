@@ -24,6 +24,7 @@ window.QUT_EVENTS = [
   },
   {
     "code": "QUT-ZHARYLKASYN-20261014",
+    "archived": true,
     "name": "Жарылқасын Дәулет",
     "type": "Бенефис шоу-концерт",
     "date": "14 қазан 2026",
