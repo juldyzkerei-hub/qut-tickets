@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: qut-tickets
-    runtime: static
-    branch: main
-    buildCommand: mkdir -p dist && cp index.html admin.html ticket.html index-2.html events.js app.css app.js afisha-askhat-20261002.png afisha-qyzdarai.png afisha-live-20261001.svg afisha-ergali-20261027.jpg afisha-zharylkasyn-20261012.jpg dist/
-    staticPublishPath: ./dist
-    autoDeployTrigger: commit
